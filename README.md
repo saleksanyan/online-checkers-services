@@ -32,6 +32,14 @@
 $ yarn install
 ```
 
+## Prestart (Optional)
+If there is no postgreSQL DB named **'chekersDb'** in your local host **please run this command`**
+
+```bash
+#prestart
+$ yarn prestart:dev
+```
+
 ## Running the app
 
 ```bash

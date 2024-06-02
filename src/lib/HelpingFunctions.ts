@@ -226,7 +226,7 @@ class HelpingFunctions {
 			return false;
 		}
 		let boardHistory = history.getBoardHistory();
-		let index = parseInt(userChoice.charAt(1));
+		let index = parseInt(userChoice);
 		board.setBoard(history.changeBoard(index));
 		history.setBoardHistory(boardHistory.slice(0, index + 1));
 		history.setStepHistory(stepHistory.slice(0, index));

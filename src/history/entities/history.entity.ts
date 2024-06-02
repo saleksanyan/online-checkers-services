@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { Color } from '../../lib/Checkers_library/src/Constants';
-import Figure from '../../lib/Checkers_library/src/Figure';
+import { Color } from '../../lib/Constants';
+import Figure from '../../lib//Figure';
 
 @Entity()
 export class History {

@@ -2,12 +2,7 @@ import {
     Entity,
     Column,
     PrimaryGeneratedColumn,
-    JoinColumn,
-    OneToOne,
   } from 'typeorm';
-import Figure from 'src/lib//Figure';
-import { Color } from "../../lib/Constants";
-import { History } from 'src/history/entities/history.entity';
 
 @Entity()
 export class Board {
@@ -15,21 +10,7 @@ export class Board {
   id: number;
 
   @Column({ type: 'json' })
-  matrix: (Figure | Color.EMPTY_PLACE)[][];
-
-  @Column()
-  blackCounter: number;
-
-  @Column()
-  whiteCounter: number;
-
-  @OneToOne(() => History, { cascade: true })
-  @JoinColumn()
-  history: History;
-
-  @Column()
-  whosTurn: Color.BLACK | Color.WHITE;
-
+  board: Board;
 }
 
 export default Board;  
