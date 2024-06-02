@@ -13,4 +13,4 @@ export class Board {
   board: Board;
 }
 
-export default Board;  
+export default Board;
