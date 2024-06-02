@@ -1,8 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
 import Board from '../../board/entities/board.entity';
-import Figure from '../../lib/Figure';
 import Position from '../../lib/Position';
 import Move from '../../lib/Move';
+import Pawn from 'src/lib/Pawn';
+import Queen from 'src/lib/Queen';
 
 
 @Entity()
@@ -15,7 +16,7 @@ export class Game {
   board: Board;
 
   @Column({ nullable: true, type: 'simple-json' })
-  currentFigure: Figure | null;
+  currentFigure: Pawn | Queen | null;
 
   @Column({ nullable: true, type: 'simple-array' })
   reachablePositionsOfCurrentFigure: Position[] | null;

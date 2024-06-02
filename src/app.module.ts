@@ -5,20 +5,36 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GameModule } from './game/modules/game.module';
 import { BoardModule } from './board/modules/board.module';
+import { join } from 'path';
+import * as dotenv from 'dotenv';
+import { HistoryModule } from './history/modules/history.module';
+
+dotenv.config();
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `.env.${process.env.NODE_ENV || 'local'}`,
+      envFilePath: `.env`,
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => (configService.get('typeorm'))
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT || "5432"),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      entities: [
+        join(__dirname, './**/**/*.entity{.ts,.js}'), // Main entities directory
+        join(__dirname, './board/entities/**/*{.ts,.js}'), // Board entities directory
+        join(__dirname, './history/entities/**/*{.ts,.js}'), // History entities directory
+      ],
+      synchronize: true,
+      logging: true,
     }),
     GameModule,
-    BoardModule
+    BoardModule,
+    HistoryModule
   ],
   controllers: [AppController],
   providers: [AppService],

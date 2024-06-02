@@ -14,6 +14,8 @@ class Pawn extends Figure {
 
 	constructor(color: Color, currentPosition: Position) {
 		super(color, currentPosition);
+		console.log('color:',color,'position:', currentPosition);
+		
 	}
 
 	reachablePositions(board: Board, moves: Move[]): Position[] {
