@@ -12,10 +12,13 @@ import { BoardModule } from './board/modules/board.module';
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV || 'local'}`,
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => (configService.get('typeorm'))
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      database: 'checkersdb',
+      entities: ['dist/**/*.entity.ts'],
+      username: 'postgres',
+      password: 'postgres1234',
+      synchronize: true
     }),
     GameModule,
     BoardModule
