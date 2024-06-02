@@ -5,8 +5,8 @@ import {
     JoinColumn,
     OneToOne,
   } from 'typeorm';
-import Figure from 'src/lib/Checkers_library/Figure';
-import { Color } from "../../lib/Checkers_library/Constants";
+import Figure from 'src/lib//Figure';
+import { Color } from "../../lib/Constants";
 import { History } from 'src/history/entities/history.entity';
 
 @Entity()
