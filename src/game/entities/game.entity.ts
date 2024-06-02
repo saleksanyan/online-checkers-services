@@ -1,8 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
 import Board from '../../board/entities/board.entity';
-import Figure from '../../lib/Checkers_library/src/Figure';
-import Position from '../../lib/Checkers_library/src/Position';
-import Move from '../../lib/Checkers_library/src/Move';
+import Figure from '../../lib/Checkers_library/Figure';
+import Position from '../../lib/Checkers_library/Position';
+import Move from '../../lib/Checkers_library/Move';
 
 
 @Entity()

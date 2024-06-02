@@ -1,7 +1,7 @@
-import { ConfigService, registerAs } from "@nestjs/config";
+import { ConfigService, registerAs } from '@nestjs/config';
 import { config as envConfig } from 'dotenv';
-import { env } from "node:process";
-import { DataSource } from "typeorm";
+import { env } from 'node:process';
+import { DataSource } from 'typeorm';
 
 envConfig({ path: `.env.${env.NODE_ENV || 'local'}` });
 const configService: ConfigService = new ConfigService();
@@ -35,6 +35,6 @@ const config = {
   migrations: [__dirname + '/../database/migrations/*{.ts,.js}'],
   migrationsTableName: 'migrations',
   migrationsRun: false,
-}
+};
 
-export const typeormConfig = registerAs('typeorm', () => config)
+export const typeormConfig = registerAs('typeorm', () => config);
