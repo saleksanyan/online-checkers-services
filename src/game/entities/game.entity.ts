@@ -23,4 +23,12 @@ export class Game {
 
   @Column({ type: 'simple-array' })
   moves: Move[] = [];
+
+  @Column({nullable: false, type: 'varchar'})
+  player1token: string
+  
+  @Column({nullable: false, type: 'varchar'})
+  player2token: string
+
+
 }
