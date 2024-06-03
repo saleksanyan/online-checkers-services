@@ -3,15 +3,16 @@ import { GameService } from '../services/game.service';
 import { GameEntity } from '../entities/game.entity';
 import { CreateGameDto } from '../dto/create-game.dto';
 import { UpdateGameDto } from '../dto/update-game.dto';
+import { CustomResponse } from 'src/helper/customResponse';
+import Game from 'src/lib/Game';
 
 @Controller('games')
 export class GameController {
   constructor(private readonly gameService: GameService) {}
 
   @Post()
-  async create(@Body() createGameDto: CreateGameDto): Promise<GameEntity> {
-    const { gameToken, board } = createGameDto;
-    return this.gameService.create(gameToken, board);
+  async create(@Body() @Body() createGameDto: CreateGameDto): Promise<CustomResponse<GameEntity>> {
+    return this.gameService.create(createGameDto);
   }
 
   @Get()

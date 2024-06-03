@@ -14,6 +14,7 @@ import BoardEntity from './board/entities/board.entity';
 import Board from './lib/Board';
 import { GameService } from './game/services/game.service';
 import { randomUUID } from 'crypto';
+import { CreateGameDto } from './game/dto/create-game.dto';
 
 async function bootstrap() {  
     const boardEntity = new BoardEntity();
@@ -24,7 +25,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const gameService = app.get(GameService)
-  gameService.create(randomUUID(), boardEntity)
+  const gameDto = new CreateGameDto()
+  gameDto.gameToken = randomUUID(); 
+  gameService.create(gameDto)
 
   const config = new DocumentBuilder()
     .setTitle('Your API Title')
