@@ -4,7 +4,7 @@ import Queen from 'src/lib/Queen';
 import Pawn from 'src/lib/Pawn';
 
 @Entity()
-export class History {
+export class HistoryEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

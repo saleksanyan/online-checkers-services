@@ -1,3 +1,5 @@
+import Board from 'src/lib/Board';
+import History from 'src/lib/History';
 import {
     Entity,
     Column,
@@ -5,12 +7,15 @@ import {
   } from 'typeorm';
 
 @Entity()
-export class Board {
+export class BoardEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: 'json' })
   board: Board;
+
+  @Column({ type: 'json' })
+  history: History;
 }
 
-export default Board;
+export default BoardEntity;

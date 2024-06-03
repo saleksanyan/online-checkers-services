@@ -1,5 +1,5 @@
 import { IsOptional } from 'class-validator';
-import { Board } from '../../board/entities/board.entity';
+import { BoardEntity } from '../../board/entities/board.entity';
 import Pawn from 'src/lib/Pawn';
 import Queen from 'src/lib/Queen';
 import Position from 'src/lib/Position';
@@ -10,7 +10,7 @@ export class UpdateGameDto {
   gameToken?: string;
 
   @IsOptional()
-  board?: Board;
+  board?: BoardEntity;
 
   @IsOptional()
   currentFigure?: Pawn | Queen | null;

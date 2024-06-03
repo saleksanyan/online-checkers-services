@@ -8,9 +8,9 @@ import { BoardModule } from './board/modules/board.module';
 import { join } from 'path';
 import * as dotenv from 'dotenv';
 import { HistoryModule } from './history/modules/history.module';
-import { Game } from './game/entities/game.entity';
-import Board from './lib/Board';
-import { History } from './history/entities/history.entity';
+import { GameEntity } from './game/entities/game.entity';
+import { HistoryEntity } from './history/entities/history.entity';
+import BoardEntity from './board/entities/board.entity';
 
 dotenv.config();
 
@@ -20,7 +20,7 @@ dotenv.config();
       isGlobal: true,
       envFilePath: `.env`,
     }),
-    TypeOrmModule.forFeature([Game, Board, History]),
+    TypeOrmModule.forFeature([GameEntity, BoardEntity, HistoryEntity]),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,

@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryColumn, OneToOne, JoinColumn, Index } from 'typeorm';
-import Board from '../../board/entities/board.entity';
+import { Entity, Column, PrimaryColumn, OneToOne, JoinColumn, Index, PrimaryGeneratedColumn } from 'typeorm';
+import BoardEntity from '../../board/entities/board.entity';
 import Position from '../../lib/Position';
 import Move from '../../lib/Move';
 import Pawn from 'src/lib/Pawn';
@@ -7,17 +7,17 @@ import Queen from 'src/lib/Queen';
 
 
 @Entity()
-export class Game {
-  @PrimaryColumn()
+export class GameEntity {
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({nullable: false})
   @Index({unique: true})
   gameToken: string;
 
-  @OneToOne(() => Board, { cascade: true })
+  @OneToOne(() => BoardEntity, { cascade: true })
   @JoinColumn()
-  board: Board;
+  board: BoardEntity;
 
   @Column({ nullable: true, type: 'json' })
   currentFigure: Pawn | Queen | null;
