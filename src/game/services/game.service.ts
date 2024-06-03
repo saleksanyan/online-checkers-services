@@ -9,9 +9,7 @@ import { BoardEntity } from '../../board/entities/board.entity';
 export class GameService {
   constructor(
     @InjectRepository(GameEntity)
-    private readonly gameRepository: Repository<GameEntity>,
-    @InjectRepository(BoardEntity)
-    private readonly boardRepository: Repository<BoardEntity>,
+    private readonly gameRepository: Repository<GameEntity>
   ) {}
 
   async create(gameToken: string, board: BoardEntity): Promise<GameEntity> {

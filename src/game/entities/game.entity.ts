@@ -5,7 +5,6 @@ import Move from '../../lib/Move';
 import Pawn from 'src/lib/Pawn';
 import Queen from 'src/lib/Queen';
 
-
 @Entity()
 export class GameEntity {
   @PrimaryGeneratedColumn()
@@ -15,7 +14,7 @@ export class GameEntity {
   @Index({unique: true})
   gameToken: string;
 
-  @OneToOne(() => BoardEntity, { cascade: true })
+  @OneToOne(() => BoardEntity, { cascade: true, nullable: false })
   @JoinColumn()
   board: BoardEntity;
 
