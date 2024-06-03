@@ -16,7 +16,7 @@ export default new DataSource({
   logging: configService.get<boolean>('DB_LOGGING', false),
 
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  migrations: [__dirname + '/../migrations/*{.ts,.js}'],
+  migrations: [__dirname + '/../database/migrations/*{.ts,.js}'],
   migrationsTableName: 'migrations',
   migrationsRun: false,
 });
@@ -32,7 +32,7 @@ const config = {
   logging: configService.get<boolean>('DB_LOGGING', false),
 
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  migrations: [__dirname + '/../migrations/*{.ts,.js}'],
+  migrations: [__dirname + '/../database/migrations/*{.ts,.js}'],
   migrationsTableName: 'migrations',
   migrationsRun: false,
 };
