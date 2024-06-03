@@ -14,7 +14,7 @@ async function createDatabase() {
   await client.connect();
 
   const dbName = process.env.DB_NAME;
-  
+
   try {
     await client.query(`CREATE DATABASE ${dbName}`);
     console.log(`Database ${dbName} created successfully.`);

@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { Color } from '../../lib/Constants';
-import Figure from '../../lib//Figure';
+import Queen from 'src/lib/Queen';
+import Pawn from 'src/lib/Pawn';
 
 @Entity()
 export class History {
@@ -8,7 +9,7 @@ export class History {
   id: number;
 
   @Column({ type: 'json' })
-  boardHistory: (Figure | Color.EMPTY_PLACE)[][][] = [];
+  boardHistory: (Queen | Pawn | Color.EMPTY_PLACE)[][][] = [];
 
   @Column({ type: 'simple-json' })
   steps: { [move: string]: string }[] = [];
