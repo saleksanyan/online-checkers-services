@@ -40,6 +40,12 @@ If there is no postgreSQL DB named **'checkersDb'** in your local host **please 
 $ yarn prestart:dev
 ```
 
+## Migrations (Optional)
+
+```bash
+$ yarn migration:run
+```
+
 ## Running the app
 
 ```bash

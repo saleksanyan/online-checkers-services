@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, OneToOne, JoinColumn, Index } from 'typeorm';
 import Board from '../../board/entities/board.entity';
 import Position from '../../lib/Position';
 import Move from '../../lib/Move';
@@ -11,11 +11,15 @@ export class Game {
   @PrimaryColumn()
   id: number;
 
+  @Column({nullable: false})
+  @Index({unique: true})
+  gameToken: string;
+
   @OneToOne(() => Board, { cascade: true })
   @JoinColumn()
   board: Board;
 
-  @Column({ nullable: true, type: 'simple-json' })
+  @Column({ nullable: true, type: 'json' })
   currentFigure: Pawn | Queen | null;
 
   @Column({ nullable: true, type: 'simple-array' })
@@ -23,12 +27,5 @@ export class Game {
 
   @Column({ type: 'simple-array' })
   moves: Move[] = [];
-
-  @Column({nullable: false, type: 'varchar'})
-  player1token: string
-  
-  @Column({nullable: false, type: 'varchar'})
-  player2token: string
-
 
 }
