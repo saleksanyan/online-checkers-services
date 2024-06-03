@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './game/controllers/game.controller';
-import { AppService } from './game/services/game.service';
+import { GameController } from './game/controllers/game.controller';
+import { GameService } from './game/services/game.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GameModule } from './game/modules/game.module';
@@ -8,6 +8,9 @@ import { BoardModule } from './board/modules/board.module';
 import { join } from 'path';
 import * as dotenv from 'dotenv';
 import { HistoryModule } from './history/modules/history.module';
+import { Game } from './game/entities/game.entity';
+import Board from './lib/Board';
+import { History } from './history/entities/history.entity';
 
 dotenv.config();
 
@@ -17,6 +20,7 @@ dotenv.config();
       isGlobal: true,
       envFilePath: `.env`,
     }),
+    TypeOrmModule.forFeature([Game, Board, History]),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -28,6 +32,7 @@ dotenv.config();
         join(__dirname, './**/**/*.entity{.ts,.js}'), // Main entities directory
         join(__dirname, './board/entities/**/*{.ts,.js}'), // Board entities directory
         join(__dirname, './history/entities/**/*{.ts,.js}'), // History entities directory
+        join(__dirname, './game/entities/**/*{.ts,.js}'), // Game entities directory
       ],
       synchronize: true,
       logging: true,
@@ -36,7 +41,7 @@ dotenv.config();
     BoardModule,
     HistoryModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [GameController],
+  providers: [GameService],
 })
 export class AppModule {}
