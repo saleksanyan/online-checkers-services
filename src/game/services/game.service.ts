@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { Game } from '../entities/game.entity';
 import { Board } from '../../board/entities/board.entity';
 
@@ -23,7 +23,11 @@ export class GameService {
   }
 
   async findOne(id: number): Promise<Game> {
-    return this.gameRepository.findOne({relations: ['board'] });
+    const options: FindOneOptions<Game> = {
+      where: { id },
+      relations: ['board'],
+    };
+    return this.gameRepository.findOne(options);
   }
 
   async update(id: number, updateGameDto: Partial<Game>): Promise<Game> {
