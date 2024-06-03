@@ -11,7 +11,7 @@ import HelpingFunctions from "./HelpingFunctions";
 
 class Game {
 	board: Board;
-	private currentFigure: Figure | null;
+	private currentFigure: Figure;
 	private reachablePositionsOfCurrentFigure: Position[] | null;
 	private moves: Move[] = [];
 

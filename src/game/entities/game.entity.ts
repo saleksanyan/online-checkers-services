@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, OneToOne, JoinColumn } from 'typeorm';
 import Board from '../../board/entities/board.entity';
 import Position from '../../lib/Position';
 import Move from '../../lib/Move';
@@ -8,7 +8,7 @@ import Queen from 'src/lib/Queen';
 
 @Entity()
 export class Game {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   @OneToOne(() => Board, { cascade: true })
