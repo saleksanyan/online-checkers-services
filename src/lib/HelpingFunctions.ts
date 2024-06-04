@@ -1,22 +1,26 @@
-import Position from "./Position";
-import Validations from "./Validations";
-import Board from "./Board";
-import { BoardConstants, Color } from "./Constants";
-import Figure from "./Figure";
-import Pawn from "./Pawn";
-import Queen from "./Queen";
-import Move from "./Move";
+import Position from './Position';
+import Validations from './Validations';
+import Board from './Board';
+import { BoardConstants, Color } from './Constants';
+import Figure from './Figure';
+import Pawn from './Pawn';
+import Queen from './Queen';
+import Move from './Move';
 
 class HelpingFunctions {
 	public static findPath(
 		reachableMoves: Move[],
 		nextPosition: Position,
-		currentPosition: Position
+		currentPosition: Position,
 	): Move[] {
 		let startIndex: number = 0;
 		let endIndex: number = 0;
 
-		for (let positionIndex = 0; positionIndex < reachableMoves.length; positionIndex++) {
+		for (
+			let positionIndex = 0;
+			positionIndex < reachableMoves.length;
+			positionIndex++
+		) {
 			let pos = reachableMoves[positionIndex];
 
 			if (
@@ -42,27 +46,36 @@ class HelpingFunctions {
 		return reachableMoves.slice(startIndex, endIndex + 1);
 	}
 
-	public static isReachablePosition(position: Position, reachablePositions: Position[]) {
+	public static isReachablePosition(
+		position: Position,
+		reachablePositions: Position[],
+	) {
 		return reachablePositions.some(
-			(pos) => pos.getColumn() === position.getColumn() && pos.getRow() === position.getRow()
+			(pos) =>
+				pos.getColumn() === position.getColumn() &&
+				pos.getRow() === position.getRow(),
 		);
 	}
 
 	public static wasNotRepeatedStap(
 		allDestinations: Position[],
 		figuresNewRow: number,
-		figuresNewColumn: number
+		figuresNewColumn: number,
 	): boolean {
 		return !allDestinations.some(
-			(pos) => pos.getColumn() === figuresNewColumn && pos.getRow() === figuresNewRow
+			(pos) =>
+				pos.getColumn() === figuresNewColumn && pos.getRow() === figuresNewRow,
 		);
 	}
 	public static addingPositionToArray(
 		figuresNewRow: number,
 		figuresNewColumn: number,
-		reachablePositions: Position[]
+		reachablePositions: Position[],
 	): Position {
-		let pos = Position.getPositionUsingBoardPlaces(figuresNewRow, figuresNewColumn);
+		let pos = Position.getPositionUsingBoardPlaces(
+			figuresNewRow,
+			figuresNewColumn,
+		);
 		let destPosition = new Position(pos);
 		reachablePositions.push(destPosition);
 		return new Position(pos);
@@ -71,7 +84,7 @@ class HelpingFunctions {
 	public static deleteAllfiguresBetweenGivenPositions(
 		start: Position,
 		dest: Position,
-		board: Board
+		board: Board,
 	): boolean {
 		let startRow = start.getRow();
 		let startColumn = start.getColumn();
@@ -153,12 +166,12 @@ class HelpingFunctions {
 				if ((row + column) % 2 !== 0 && row < (BoardConstants.ROWS - 2) / 2) {
 					boardMatrix[row][column] = new Pawn(
 						Color.BLACK,
-						new Position(Position.getPositionUsingBoardPlaces(row, column))
+						new Position(Position.getPositionUsingBoardPlaces(row, column)),
 					);
 				} else if ((row + column) % 2 !== 0 && row > BoardConstants.ROWS / 2) {
 					boardMatrix[row][column] = new Pawn(
 						Color.WHITE,
-						new Position(Position.getPositionUsingBoardPlaces(row, column))
+						new Position(Position.getPositionUsingBoardPlaces(row, column)),
 					);
 				} else {
 					boardMatrix[row][column] = Color.EMPTY_PLACE;
@@ -182,11 +195,17 @@ class HelpingFunctions {
 
 		boardPlate[row][column] = new Queen(
 			figure.getColor(),
-			new Position(Position.getPositionUsingBoardPlaces(row, column))
+			new Position(Position.getPositionUsingBoardPlaces(row, column)),
 		);
 	}
 
-	public static swap(newRow: number, newColumn: number, row: number, column: number, board: Board) {
+	public static swap(
+		newRow: number,
+		newColumn: number,
+		row: number,
+		column: number,
+		board: Board,
+	) {
 		let boardPlate = board.getBoard();
 
 		let temp = boardPlate[row][column];
@@ -199,7 +218,7 @@ class HelpingFunctions {
 	}
 
 	public static deepCopyMatrix(
-		board: (Figure | Color.EMPTY_PLACE)[][]
+		board: (Figure | Color.EMPTY_PLACE)[][],
 	): (Figure | Color.EMPTY_PLACE)[][] {
 		return board.map((row) =>
 			row.map((item) => {
@@ -210,7 +229,7 @@ class HelpingFunctions {
 				} else {
 					return item;
 				}
-			})
+			}),
 		);
 	}
 
@@ -219,7 +238,7 @@ class HelpingFunctions {
 			return false;
 		}
 		const userChoiceNum = Number(userChoice);
-	
+
 		let history = board.getHistory();
 		let stepHistory = history.getSteps();
 		if (userChoiceNum < 0 || userChoiceNum >= stepHistory.length) {

@@ -1,11 +1,11 @@
-import Figure from "./Figure";
-import Validations from "./Validations";
-import Position from "./Position";
+import Figure from './Figure';
+import Validations from './Validations';
+import Position from './Position';
 
-import { BoardConstants, Color } from "./Constants";
-import Board from "./Board";
-import HelpingFunctions from "./HelpingFunctions";
-import Move from "./Move";
+import { BoardConstants, Color } from './Constants';
+import Board from './Board';
+import HelpingFunctions from './HelpingFunctions';
+import Move from './Move';
 
 class Queen extends Figure {
 	constructor(color: Color, position: Position) {
@@ -16,7 +16,14 @@ class Queen extends Figure {
 		let visited = new Array(BoardConstants.ROWS)
 			.fill(null)
 			.map(() => new Array(BoardConstants.COLUMNS).fill(false));
-		return this.allDestinations(this.currentPosition, board, false, [], moves, visited);
+		return this.allDestinations(
+			this.currentPosition,
+			board,
+			false,
+			[],
+			moves,
+			visited,
+		);
 	}
 
 	allDestinations(
@@ -25,7 +32,7 @@ class Queen extends Figure {
 		afterEating: boolean,
 		allDestinations: Position[],
 		moves: Move[],
-		visited: boolean[][]
+		visited: boolean[][],
 	): Position[] {
 		if (!(this instanceof Queen)) {
 			return [];
@@ -46,10 +53,13 @@ class Queen extends Figure {
 
 			while (Validations.isValidPlace(row, column)) {
 				let backToSamePosition =
-					this.currentPosition.getColumn() === column && this.currentPosition.getRow() === row;
+					this.currentPosition.getColumn() === column &&
+					this.currentPosition.getRow() === row;
 				if (!sameColorFigure) {
-
-					if (isCaptured && (Validations.placeIsEmpty(row, column, board) || backToSamePosition)) {
+					if (
+						isCaptured &&
+						(Validations.placeIsEmpty(row, column, board) || backToSamePosition)
+					) {
 						isCaptured = false;
 					}
 					if (
@@ -59,7 +69,11 @@ class Queen extends Figure {
 					) {
 						const figure = board.getBoard()[row][column];
 						if (figure instanceof Figure) {
-							if (!isCaptured && !visited[row][column] && this.hasOppositeColor(figure)) {
+							if (
+								!isCaptured &&
+								!visited[row][column] &&
+								this.hasOppositeColor(figure)
+							) {
 								isCaptured = true;
 								afterEatingFlag = true;
 								eatablePositions = [row, column];
@@ -79,18 +93,38 @@ class Queen extends Figure {
 					} else if (!isCaptured && (!afterEating || afterEatingFlag)) {
 						if (afterEatingFlag && !visited[row][column]) {
 							visited[row][column] = true;
-							let nextPos = HelpingFunctions.addingPositionToArray(row, column, allDestinations);
+							let nextPos = HelpingFunctions.addingPositionToArray(
+								row,
+								column,
+								allDestinations,
+							);
 							moves.push(new Move(position, nextPos));
 							let eatableFigureRow = eatablePositions[0];
 							let eatableFigureColumn = eatablePositions[1];
 							visited[eatableFigureRow][eatableFigureColumn] = true;
-							this.allDestinations(nextPos, board, true, allDestinations, moves, visited);
+							this.allDestinations(
+								nextPos,
+								board,
+								true,
+								allDestinations,
+								moves,
+								visited,
+							);
 							visited[row][column] = false;
 							afterEatingFlag = false;
 						} else if (!visited[row][column]) {
-							HelpingFunctions.addingPositionToArray(row, column, allDestinations);
+							HelpingFunctions.addingPositionToArray(
+								row,
+								column,
+								allDestinations,
+							);
 							moves.push(
-								new Move(position, new Position(Position.getPositionUsingBoardPlaces(row, column)))
+								new Move(
+									position,
+									new Position(
+										Position.getPositionUsingBoardPlaces(row, column),
+									),
+								),
 							);
 						}
 						afterEatingFlag = false;
@@ -105,8 +139,8 @@ class Queen extends Figure {
 	}
 
 	toString() {
-		if (this.getColor() === Color.BLACK) return "🟥";
-		return "⬜️";
+		if (this.getColor() === Color.BLACK) return '🟥';
+		return '⬜️';
 	}
 }
 

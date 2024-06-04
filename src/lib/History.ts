@@ -1,6 +1,6 @@
-import { Color } from "./Constants";
-import Figure from "./Figure";
-import Move from "./Move";
+import { Color } from './Constants';
+import Figure from './Figure';
+import Move from './Move';
 
 class History {
 	private boardHistory: (Figure | Color.EMPTY_PLACE)[][][];
@@ -25,7 +25,9 @@ class History {
 		return this.boardHistory[indexFromBoardHistroy];
 	}
 
-	getByIndex(indexFromBoardHistroy: number): (Figure | Color.EMPTY_PLACE)[][] | null {
+	getByIndex(
+		indexFromBoardHistroy: number,
+	): (Figure | Color.EMPTY_PLACE)[][] | null {
 		if (indexFromBoardHistroy >= this.size || indexFromBoardHistroy < 0) {
 			return null;
 		}
@@ -58,7 +60,6 @@ class History {
 	setStepHistory(steps: { [move: string]: string }[]) {
 		this.steps = steps;
 	}
-
 }
 
 export default History;

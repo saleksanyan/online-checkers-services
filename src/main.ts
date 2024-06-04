@@ -10,34 +10,28 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import BoardEntity from './board/entities/board.entity';
 import Board from './lib/Board';
 import { GameService } from './game/services/game.service';
 import { randomUUID } from 'crypto';
 import { CreateGameDto } from './game/dto/create-game.dto';
 
-async function bootstrap() {  
-    const boardEntity = new BoardEntity();
-    const board = new Board();
+async function bootstrap() {
+	const app = await NestFactory.create(AppModule);
 
-    boardEntity.board = board;
-    
-  const app = await NestFactory.create(AppModule);
+	// const gameService = app.get(GameService);
+	// const gameDto = new CreateGameDto();
+	// gameDto.gameToken = randomUUID();
+	// gameService.create(gameDto);
 
-  const gameService = app.get(GameService)
-  const gameDto = new CreateGameDto()
-  gameDto.gameToken = randomUUID(); 
-  gameService.create(gameDto)
+	const config = new DocumentBuilder()
+		.setTitle('Your API Title')
+		.setDescription('API description')
+		.setVersion('1.0')
+		.build();
+	const document = SwaggerModule.createDocument(app, config);
 
-  const config = new DocumentBuilder()
-    .setTitle('Your API Title')
-    .setDescription('API description')
-    .setVersion('1.0')
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
+	SwaggerModule.setup('api', app, document);
 
-  SwaggerModule.setup('api', app, document);
-
-  await app.listen(3000);
+	await app.listen(3000);
 }
 bootstrap();
