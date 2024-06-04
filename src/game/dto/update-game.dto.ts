@@ -7,6 +7,9 @@ import Move from 'src/lib/Move';
 
 export class UpdateGameDto {
   @IsOptional()
+  id?: number;
+  
+  @IsOptional()
   gameToken?: string;
 
   @IsOptional()

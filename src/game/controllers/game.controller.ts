@@ -4,7 +4,6 @@ import { GameEntity } from '../entities/game.entity';
 import { CreateGameDto } from '../dto/create-game.dto';
 import { UpdateGameDto } from '../dto/update-game.dto';
 import { CustomResponse } from 'src/helper/customResponse';
-import Game from 'src/lib/Game';
 
 @Controller('games')
 export class GameController {
@@ -16,22 +15,22 @@ export class GameController {
   }
 
   @Get()
-  async findAll(): Promise<GameEntity[]> {
+  async findAll(): Promise<CustomResponse<GameEntity[]>> {
     return this.gameService.findAll();
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: number): Promise<GameEntity> {
-    return this.gameService.findOne(id);
+  @Get(':gameToken')
+  async findOne(@Param('gameToken') gameToken: string): Promise<CustomResponse<GameEntity>> {
+    return this.gameService.findOne(gameToken);
   }
 
-  @Patch(':id')
-  async update(@Param('id') id: number, @Body() updateGameDto: UpdateGameDto): Promise<GameEntity> {
-    return this.gameService.update(id, updateGameDto);
+  @Patch()
+  async update(@Body() updateGameDto: UpdateGameDto): Promise<CustomResponse<GameEntity>> {
+    return this.gameService.update(updateGameDto);
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: number): Promise<void> {
-    return this.gameService.remove(id);
+  @Delete(':gameToken')
+  async remove(@Param('gameToken') gameToken: string): Promise<void> {
+    return this.gameService.remove(gameToken);
   }
 }

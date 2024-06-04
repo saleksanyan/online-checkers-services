@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { GameController } from './game/controllers/game.controller';
 import { GameService } from './game/services/game.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GameModule } from './game/modules/game.module';
 import { BoardModule } from './board/modules/board.module';

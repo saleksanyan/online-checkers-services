@@ -56,24 +56,72 @@ export class GameService {
   }
 
 
-  async findAll(): Promise<GameEntity[]> {
-    return this.gameRepository.find({ relations: ['board'] });
+  async findAll(): Promise<CustomResponse<GameEntity[]>> {
+    let games = this.gameRepository.find({ relations: ['board'] });
+    if(games != null){
+      return new CustomResponse<GameEntity[]>(
+        SUCCESS_MESSAGE,
+        await games,
+        null,
+        RESPONSE_MESSAGES.GAME_FOUND, 
+      );
+    }
+    return new CustomResponse<GameEntity[]>(
+      ERROR_MESSAGE,
+      null,
+      null,
+      RESPONSE_MESSAGES.GAME_WAS_NOT_FOUND 
+    );
+    
   }
 
-  async findOne(id: number): Promise<GameEntity> {
+  async findOne(gameToken: string): Promise<CustomResponse<GameEntity>> {
     const options: FindOneOptions<GameEntity> = {
-      where: { id },
+      where: { gameToken: gameToken },
       relations: ['board'],
     };
-    return this.gameRepository.findOne(options);
-  }
+    console.log(gameToken)
 
-  async update(id: number, updateGameDto: Partial<GameEntity>): Promise<GameEntity> {
-    await this.gameRepository.update(id, updateGameDto);
-    return this.findOne(id);
-  }
+    try {
+      const foundGame = await this.gameRepository.findOne(options);
+        
+      return new CustomResponse<GameEntity>(
+        SUCCESS_MESSAGE,
+        foundGame,
+        null,
+        RESPONSE_MESSAGES.GAME_FOUND
+      );
+        
+    } catch (error) {
+        console.error('Error finding game:', error);
+        return new CustomResponse<GameEntity>(
+            ERROR_MESSAGE,
+            null,
+            error.message,
+            RESPONSE_MESSAGES.GAME_WAS_NOT_FOUND
+        );
+    }
+}
 
-  async remove(id: number): Promise<void> {
-    await this.gameRepository.delete(id);
+  async update(updateGameDto: Partial<GameEntity>): Promise<CustomResponse<GameEntity>> {
+    try {
+      let data = this.findOne(updateGameDto.gameToken);
+      await this.gameRepository.update((await data).data.id, updateGameDto);
+      let returnData = this.findOne(updateGameDto.gameToken);
+      return returnData;
+    } catch (error) {
+        console.error('Error updating GameEntity:', error);
+        return new CustomResponse<GameEntity>(
+            ERROR_MESSAGE, 
+            null,
+            error.message,
+            RESPONSE_MESSAGES.UPDATE_GAME_FAIL
+        );
+    }
+}
+
+
+  async remove(gameToken: string): Promise<void> {
+    await this.gameRepository.delete(gameToken);
   }
 }
