@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindOneOptions, Repository, DataSource } from 'typeorm';
 import { GameEntity } from '../entities/game.entity';
 import { BoardEntity } from '../../board/entities/board.entity';
 import Board from 'src/lib/Board';
@@ -101,7 +101,7 @@ export class GameService {
             RESPONSE_MESSAGES.GAME_WAS_NOT_FOUND
         );
     }
-}
+  }
 
   async update(updateGameDto: Partial<GameEntity>): Promise<CustomResponse<GameEntity>> {
     try {
@@ -109,7 +109,8 @@ export class GameService {
       await this.gameRepository.update((await data).data.id, updateGameDto);
       let returnData = this.findOne(updateGameDto.gameToken);
       return returnData;
-    } catch (error) {
+    } 
+    catch (error) {
         console.error('Error updating GameEntity:', error);
         return new CustomResponse<GameEntity>(
             ERROR_MESSAGE, 
@@ -118,10 +119,11 @@ export class GameService {
             RESPONSE_MESSAGES.UPDATE_GAME_FAIL
         );
     }
-}
+  }
 
 
   async remove(gameToken: string): Promise<void> {
-    await this.gameRepository.delete(gameToken);
+    let data = this.findOne(gameToken);
+    await this.gameRepository.delete((await data).data.id);
   }
 }
