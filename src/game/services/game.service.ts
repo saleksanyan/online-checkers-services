@@ -7,6 +7,7 @@ import { RESPONSE_MESSAGES } from 'src/helper/respose-messages';
 import { CustomResponse } from 'src/helper/customResponse';
 import { CreateGameDto } from '../dto/create-game.dto';
 import Game from 'src/lib/Game';
+import { HashingService } from 'src/helper/hashingService';
 
 @Injectable()
 export class GameService {
@@ -18,6 +19,11 @@ export class GameService {
 	async create(
 		createGameDto: CreateGameDto,
 	): Promise<CustomResponse<GameEntity>> {
+    //hashing
+    const initalGameToken = createGameDto.gameToken;
+    const hashedGameToken = HashingService.hashData(initalGameToken);
+    createGameDto.gameToken = hashedGameToken;
+
 		const existingGame = await this.gameRepository.findOne({
 			where: { gameToken: createGameDto.gameToken },
 		});
@@ -56,13 +62,18 @@ export class GameService {
 	}
 
 	async findOne(gameToken: string): Promise<GameEntity> {
+    
+    const hashedGameToken = HashingService.hashData(gameToken);
 		const options: FindOneOptions<GameEntity> = {
-			where: { gameToken: gameToken }
+			where: { gameToken: hashedGameToken }
 		};
 		return this.gameRepository.findOne(options);
 	}
 
 	async update(updateGameDto: Partial<GameEntity>): Promise<GameEntity> {
+    const initalGameToken = updateGameDto.gameToken;
+    const hashedGameToken = HashingService.hashData(initalGameToken);
+    updateGameDto.gameToken = hashedGameToken;
 		const options: FindOptionsWhere<GameEntity> = {
 			gameToken: updateGameDto.gameToken,
 		};
@@ -70,20 +81,14 @@ export class GameService {
 			await this.gameRepository.update(options, updateGameDto);
 			return this.findOne(updateGameDto.gameToken);
 		} catch (error) {
-			const response = new CustomResponse<GameEntity>(
-				ERROR_MESSAGE,
-				undefined,
-				error.message,
-				RESPONSE_MESSAGES.UPDATE_GAME_FAIL,
-			);
-
 			throw new HttpException(ERROR_MESSAGE.concat(error.message), 500);
 		}
 	}
 
 	async remove(gameToken: string): Promise<void> {
+    const hashedGameToken = HashingService.hashData(gameToken);
     const options: FindOptionsWhere<GameEntity> = {
-			 gameToken: gameToken 
+			 gameToken: hashedGameToken 
 		};
 		await this.gameRepository.delete(options);
 	}
