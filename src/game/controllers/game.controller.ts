@@ -24,7 +24,6 @@ export class GameController {
 	): Promise<CustomResponse<GameEntity>> {
 		return this.gameService.create(createGameDto);
 	}
-
 	@Get()
 	async findAll(): Promise<GameEntity[]> {
 		return this.gameService.findAll();
@@ -44,4 +43,5 @@ export class GameController {
 	async remove(@Param('id') id: number): Promise<void> {
 		return this.gameService.remove(id);
 	}
+
 }
