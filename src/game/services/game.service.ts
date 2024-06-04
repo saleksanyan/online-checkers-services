@@ -81,8 +81,11 @@ export class GameService {
 		}
 	}
 
-	async remove(id: number): Promise<void> {
-		await this.gameRepository.delete(id);
+	async remove(gameToken: string): Promise<void> {
+    const options: FindOptionsWhere<GameEntity> = {
+			 gameToken: gameToken 
+		};
+		await this.gameRepository.delete(options);
 	}
 
 }
