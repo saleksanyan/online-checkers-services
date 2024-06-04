@@ -1,7 +1,9 @@
 import { IsNotEmpty } from 'class-validator';
-import { BoardEntity } from '../../board/entities/board.entity';
+import Game from 'src/lib/Game';
 
 export class CreateGameDto {
-  @IsNotEmpty()
-  gameToken: string;
+	@IsNotEmpty()
+	gameToken: string;
+
+	game?: Game;
 }

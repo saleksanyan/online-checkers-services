@@ -1,30 +1,29 @@
-import { Entity, Column, PrimaryColumn, OneToOne, JoinColumn, Index, PrimaryGeneratedColumn } from 'typeorm';
-import BoardEntity from '../../board/entities/board.entity';
-import Position from '../../lib/Position';
-import Move from '../../lib/Move';
-import Pawn from 'src/lib/Pawn';
-import Queen from 'src/lib/Queen';
+import {
+	Entity,
+	Column,
+	PrimaryColumn,
+	OneToOne,
+	JoinColumn,
+	Index,
+	PrimaryGeneratedColumn,
+	ValueTransformer,
+} from 'typeorm';
+import Game from 'src/lib/Game';
+
+const gameTransformer: ValueTransformer = {
+	to: (game: Game) => JSON.stringify(game),
+	from: (value: string) => JSON.parse(value) as Game,
+};
 
 @Entity()
 export class GameEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+	@PrimaryGeneratedColumn()
+	id: number;
 
-  @Column({nullable: false})
-  @Index({unique: true})
-  gameToken: string;
+	@Column({ nullable: false })
+	@Index({ unique: true })
+	gameToken: string;
 
-  @OneToOne(() => BoardEntity, { cascade: true, nullable: false })
-  @JoinColumn()
-  board: BoardEntity;
-
-  @Column({ nullable: true, type: 'json' })
-  currentFigure: Pawn | Queen | null;
-
-  @Column({ nullable: true, type: 'simple-array' })
-  reachablePositionsOfCurrentFigure: Position[] | null;
-
-  @Column({ type: 'simple-array' })
-  moves: Move[] = [];
-
+	@Column({ type: 'json', transformer: gameTransformer })
+	game: Game;
 }

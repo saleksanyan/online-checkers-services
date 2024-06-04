@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Param, Delete, Patch } from '@nestjs/common';
+import {
+	Controller,
+	Get,
+	Post,
+	Body,
+	Param,
+	Delete,
+	Patch,
+	HttpException,
+} from '@nestjs/common';
 import { GameService } from '../services/game.service';
 import { GameEntity } from '../entities/game.entity';
 import { CreateGameDto } from '../dto/create-game.dto';
@@ -7,30 +16,32 @@ import { CustomResponse } from 'src/helper/customResponse';
 
 @Controller('games')
 export class GameController {
-  constructor(private readonly gameService: GameService) {}
+	constructor(private readonly gameService: GameService) {}
 
-  @Post()
-  async create(@Body() @Body() createGameDto: CreateGameDto): Promise<CustomResponse<GameEntity>> {
-    return this.gameService.create(createGameDto);
-  }
+	@Post()
+	async create(
+		@Body() createGameDto: CreateGameDto,
+	): Promise<CustomResponse<GameEntity>> {
+		return this.gameService.create(createGameDto);
+	}
+	@Get()
+	async findAll(): Promise<GameEntity[]> {
+		return this.gameService.findAll();
+	}
 
-  @Get()
-  async findAll(): Promise<CustomResponse<GameEntity[]>> {
-    return this.gameService.findAll();
-  }
+	@Get(':gameToken')
+	async findOne(@Param('gameToken') gameToken: string): Promise<GameEntity> {
+		return this.gameService.findOne(gameToken);
+	}
 
-  @Get(':gameToken')
-  async findOne(@Param('gameToken') gameToken: string): Promise<CustomResponse<GameEntity>> {
-    return this.gameService.findOne(gameToken);
-  }
+	@Patch()
+	async update(@Body() updateGameDto: UpdateGameDto): Promise<GameEntity> {
+		return this.gameService.update(updateGameDto);
+	}
 
-  @Patch()
-  async update(@Body() updateGameDto: UpdateGameDto): Promise<CustomResponse<GameEntity>> {
-    return this.gameService.update(updateGameDto);
-  }
+	@Delete(':id')
+	async remove(@Param('id') id: number): Promise<void> {
+		return this.gameService.remove(id);
+	}
 
-  @Delete(':gameToken')
-  async remove(@Param('gameToken') gameToken: string): Promise<void> {
-    return this.gameService.remove(gameToken);
-  }
 }

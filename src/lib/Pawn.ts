@@ -1,11 +1,11 @@
-import Figure from "./Figure";
-import Position from "./Position";
-import { Color } from "./Constants";
+import Figure from './Figure';
+import Position from './Position';
+import { Color } from './Constants';
 
-import Board from "./Board";
-import Validations from "./Validations";
-import HelpingFunctions from "./HelpingFunctions";
-import Move from "./Move";
+import Board from './Board';
+import Validations from './Validations';
+import HelpingFunctions from './HelpingFunctions';
+import Move from './Move';
 
 class Pawn extends Figure {
 	private readonly reachablePositionsWithoutEating = [1, -1];
@@ -25,7 +25,7 @@ class Pawn extends Figure {
 		board: Board,
 		afterEating: boolean,
 		allDestinations: Position[],
-		moves: Move[]
+		moves: Move[],
 	): Position[] {
 		let row = position.getRow();
 		let column = position.getColumn();
@@ -40,54 +40,90 @@ class Pawn extends Figure {
 				reachableColumn < this.reachablePositionsWithoutEating.length;
 				reachableColumn++
 			) {
-				let eatableFigureRow = this.reachablePositionsWithoutEating[reachableRow] + row;
-				let eatableFigureColumn = this.reachablePositionsWithoutEating[reachableColumn] + column;
-				let figuresNewRow = this.reachablePositionsAfterEating[reachableRow] + row;
-				let figuresNewColumn = this.reachablePositionsAfterEating[reachableColumn] + column;
+				let eatableFigureRow =
+					this.reachablePositionsWithoutEating[reachableRow] + row;
+				let eatableFigureColumn =
+					this.reachablePositionsWithoutEating[reachableColumn] + column;
+				let figuresNewRow =
+					this.reachablePositionsAfterEating[reachableRow] + row;
+				let figuresNewColumn =
+					this.reachablePositionsAfterEating[reachableColumn] + column;
 
 				if (Validations.isValidPlace(eatableFigureRow, eatableFigureColumn)) {
 					if (
-						Validations.placeIsEmpty(eatableFigureRow, eatableFigureColumn, board) &&
+						Validations.placeIsEmpty(
+							eatableFigureRow,
+							eatableFigureColumn,
+							board,
+						) &&
 						!afterEating &&
-						Validations.notStepBack(this.getColor(), eatableFigureRow, this.currentPosition)
+						Validations.notStepBack(
+							this.getColor(),
+							eatableFigureRow,
+							this.currentPosition,
+						)
 					) {
 						HelpingFunctions.addingPositionToArray(
 							eatableFigureRow,
 							eatableFigureColumn,
-							allDestinations
+							allDestinations,
 						);
 						moves.push(
 							new Move(
 								position,
 								new Position(
-									Position.getPositionUsingBoardPlaces(eatableFigureRow, eatableFigureColumn)
-								)
-							)
+									Position.getPositionUsingBoardPlaces(
+										eatableFigureRow,
+										eatableFigureColumn,
+									),
+								),
+							),
 						);
 					} else if (
-						!Validations.placeIsEmpty(eatableFigureRow, eatableFigureColumn, board) &&
+						!Validations.placeIsEmpty(
+							eatableFigureRow,
+							eatableFigureColumn,
+							board,
+						) &&
 						Validations.isValidPlace(figuresNewRow, figuresNewColumn) &&
 						Validations.placeIsEmpty(figuresNewRow, figuresNewColumn, board) &&
-						HelpingFunctions.wasNotRepeatedStap(allDestinations, figuresNewRow, figuresNewColumn)
+						HelpingFunctions.wasNotRepeatedStap(
+							allDestinations,
+							figuresNewRow,
+							figuresNewColumn,
+						)
 					) {
-						let figure = board.getBoard()[eatableFigureRow][eatableFigureColumn];
+						let figure =
+							board.getBoard()[eatableFigureRow][eatableFigureColumn];
 
-						if (figure instanceof Figure && board.getWhosTurn() !== figure.getColor()) {
+						if (
+							figure instanceof Figure &&
+							board.getWhosTurn() !== figure.getColor()
+						) {
 							let nextPos = HelpingFunctions.addingPositionToArray(
 								figuresNewRow,
 								figuresNewColumn,
-								allDestinations
+								allDestinations,
 							);
 							moves.push(
 								new Move(
 									position,
 									new Position(
-										Position.getPositionUsingBoardPlaces(figuresNewRow, figuresNewColumn)
-									)
-								)
+										Position.getPositionUsingBoardPlaces(
+											figuresNewRow,
+											figuresNewColumn,
+										),
+									),
+								),
 							);
 
-							this.allDestinations(nextPos, board, true, allDestinations, moves);
+							this.allDestinations(
+								nextPos,
+								board,
+								true,
+								allDestinations,
+								moves,
+							);
 						}
 					}
 				}
@@ -98,8 +134,8 @@ class Pawn extends Figure {
 	}
 
 	toString() {
-		if (this.getColor() === Color.BLACK) return "🔴";
-		return "⚪";
+		if (this.getColor() === Color.BLACK) return '🔴';
+		return '⚪';
 	}
 }
 

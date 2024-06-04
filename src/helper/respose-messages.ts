@@ -4,8 +4,7 @@ export const RESPONSE_MESSAGES = {
     GAME_EXISTS: 'Game already exists',
     GAME_FOUND: 'Game has been found',
     GAME_WAS_NOT_FOUND: 'No game has been found',
-    UPDATE_GAME_FAIL: 'Nothing to update',
-    UPDATE_GAME_SUCCESS: 'Everything is up to date'
+    UPDATE_GAME_SUCCESS: 'Game succesfully updated',
+	  UPDATE_GAME_FAIL: 'Failed to update the game',
   }
-  
   
