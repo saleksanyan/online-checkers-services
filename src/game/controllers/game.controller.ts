@@ -1,4 +1,3 @@
-<<<<<<< addedAPI
 import {
 	Controller,
 	Get,
@@ -9,9 +8,6 @@ import {
 	Patch,
 	Query,
 } from '@nestjs/common';
-=======
-import { Controller, Get, Post, Body, Param, Delete, Patch, BadRequestException, Query } from '@nestjs/common';
->>>>>>> main
 import { GameService } from '../services/game.service';
 import { GameEntity } from '../entities/game.entity';
 import { CreateGameDto } from '../dto/create-game.dto';
@@ -44,8 +40,6 @@ export class GameController {
 	async remove(@Param('gameToken') gameToken: string): Promise<void> {
 		return this.gameService.remove(gameToken);
 	}
-
-<<<<<<< addedAPI
 	@Patch(':gameToken/pickAFigure/:position')
 	async pickAFigure( @Param('gameToken') gameToken: string, 
 		@Param('position') position: string ): Promise<CustomResponse<GameEntity>> {
@@ -60,20 +54,5 @@ export class GameController {
 	@Patch(':gameToken/makeTheNextMove/:makeTheNextMove/') 
 	async makeTheNextMove(@Param('gameToken') gameToken: string, @Query('nextStep') nextStep: string): Promise<GameEntity> { 
 		return this.gameService.makeTheNextMove(gameToken, nextStep); 
-=======
-	@Patch(':gameToken/undoMove/:index')
-	async undoMove(@Param('gameToken') gameToken: string, @Query('index') index: string): Promise<GameEntity> {
-		return this.gameService.undoMove(gameToken, index);
-	}
-
-	@Patch(':gameToken/pickAFigure/')
-	async pickAFigure(@Param('gameToken') gameToken: string, @Query('currentPosition') currentPosition: string): Promise<GameEntity> {
-		return this.gameService.pickAFigure(gameToken, currentPosition);
-	}
-
-	@Patch(':gameToken/makeTheNextMove/')
-	async makeTheNextMove(@Param('gameToken') gameToken: string, @Query('nextStep') nextStep: string): Promise<void> {
-		return this.gameService.makeTheNextMove(gameToken, nextStep);
->>>>>>> main
 	}
 }
