@@ -14,21 +14,14 @@ import Queen from './Queen';
 class Game {
 	board: Board;
 	currentFigure: Figure;
-<<<<<<< addedAPI
 	reachablePositionsOfCurrentFigure: Position[] | null;
 	moves: Move[] = [];
-=======
-	private reachablePositionsOfCurrentFigure: Position[] | null;
-	private moves: Move[] = [];
->>>>>>> main
-
 	constructor() {
 		this.board = new Board();
 		this.currentFigure = null;
 		this.reachablePositionsOfCurrentFigure = null;
 	}
 
-<<<<<<< addedAPI
 	
 	toJSON() {
         let serializedReachablePositions = null;
@@ -91,19 +84,6 @@ class Game {
 			return null;
 		}
 		let position = new Position(startPosition);
-=======
-	static fromJSON(json: any): Game {
-		return Object.assign(new Game(), json);
-	}
-
-	//example of move` 'a3'
-	pickAFigure(currentPosition: string): Position[] | null {
-		this.assignToNull();
-		if (!Validations.isValidPosition(currentPosition, this.board)) {
-			return null;
-		}
-		let position = new Position(currentPosition);
->>>>>>> main
 		let figure = this.board.getBoard()[position.getRow()][position.getColumn()];
 		if (figure instanceof Figure) { 
 			this.currentFigure = figure;
