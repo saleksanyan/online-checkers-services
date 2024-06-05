@@ -1,4 +1,3 @@
-<<<<<<< addedAPI
 import {
 	Entity,
 	Column,
