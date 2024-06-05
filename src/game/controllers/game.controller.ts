@@ -38,14 +38,14 @@ export class GameController {
 		return this.gameService.update(updateGameDto);
 	}
 
-	@Delete(':id')
-	async remove(@Param('id') id: number): Promise<void> {
-		return this.gameService.remove(id);
+	@Delete(':gameToken')
+	async remove(@Param('gameToken') gameToken: string): Promise<void> {
+		return this.gameService.remove(gameToken);
 	}
 
 	@Patch(':gameToken/pickAFigure/:position')
 	async pickAFigure( @Param('gameToken') gameToken: string, 
-		@Param('position') position: string ): Promise<CustomResponse<GameEntity>> {
+		@Param('position') position: string ): Promise<GameEntity> {
 		return this.gameService.pickAFigure(gameToken, position);
 	}
 
