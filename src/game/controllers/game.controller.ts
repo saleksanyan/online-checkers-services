@@ -1,13 +1,4 @@
-import {
-	Controller,
-	Get,
-	Post,
-	Body,
-	Param,
-	Delete,
-	Patch,
-	BadRequestException,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch, BadRequestException, Query } from '@nestjs/common';
 import { GameService } from '../services/game.service';
 import { GameEntity } from '../entities/game.entity';
 import { CreateGameDto } from '../dto/create-game.dto';
@@ -19,9 +10,7 @@ export class GameController {
 	constructor(private readonly gameService: GameService) {}
 
 	@Post()
-	async create(
-		@Body() createGameDto: CreateGameDto,
-	): Promise<CustomResponse<GameEntity>> {
+	async create(@Body() createGameDto: CreateGameDto): Promise<CustomResponse<GameEntity>> {
 		return this.gameService.create(createGameDto);
 	}
 	@Get()
@@ -29,7 +18,7 @@ export class GameController {
 		return this.gameService.findAll();
 	}
 
-	@Get(':game')
+	@Get('/game:gameToken')
 	async findOne(@Param('gameToken') gameToken: string): Promise<GameEntity> {
 		return this.gameService.findOne(gameToken);
 	}
@@ -39,17 +28,23 @@ export class GameController {
 		return this.gameService.update(updateGameDto);
 	}
 
-	@Delete(':deleteGame')
+	@Delete(':gameToken/deleteGame')
 	async remove(@Param('gameToken') gameToken: string): Promise<void> {
 		return this.gameService.remove(gameToken);
 	}
 
 	@Patch(':gameToken/undoMove/:index')
-	async undoMove(@Param('gameToken') gameToken: string, @Param('index') index: string): Promise<GameEntity> {
-		const indexNumber = parseInt(index, 10);
-		if (isNaN(indexNumber)) {
-			throw new BadRequestException('Index must be a number');
-		}
+	async undoMove(@Param('gameToken') gameToken: string, @Query('index') index: string): Promise<GameEntity> {
 		return this.gameService.undoMove(gameToken, index);
+	}
+
+	@Patch(':gameToken/pickAFigure/')
+	async pickAFigure(@Param('gameToken') gameToken: string, @Query('currentPosition') currentPosition: string): Promise<GameEntity> {
+		return this.gameService.pickAFigure(gameToken, currentPosition);
+	}
+
+	@Patch(':gameToken/makeTheNextMove/')
+	async makeTheNextMove(@Param('gameToken') gameToken: string, @Query('nextStep') nextStep: string): Promise<void> {
+		return this.gameService.makeTheNextMove(gameToken, nextStep);
 	}
 }

@@ -7,18 +7,20 @@ class Board {
 	private matrix: (Figure | Color.EMPTY_PLACE)[][];
 	private blackCounter: number;
 	private whiteCounter: number;
-	private history: History;
+	history: History;
 	private whosTurn: Color.BLACK | Color.WHITE;
 
 	constructor() {
-		this.matrix = new Array(BoardConstants.ROWS)
-			.fill(null)
-			.map(() => new Array(BoardConstants.COLUMNS));
+		this.matrix = new Array(BoardConstants.ROWS).fill(null).map(() => new Array(BoardConstants.COLUMNS));
 		this.history = new History();
 		HelpingFunctions.constructBoard(this.matrix);
 		this.whosTurn = Color.WHITE;
 		this.blackCounter = BoardConstants.PAWN_COUNT;
 		this.whiteCounter = BoardConstants.PAWN_COUNT;
+	}
+
+	static fromJSON(json: any): Board {
+		return Object.assign(new Board(), json);
 	}
 
 	decrementWhiteCounter() {

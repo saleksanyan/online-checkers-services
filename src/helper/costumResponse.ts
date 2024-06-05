@@ -1,22 +1,22 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CustomResponse<T> {
-  @IsNotEmpty()
-  @IsString()
-  status: string;
+	@IsNotEmpty()
+	@IsString()
+	status: string;
 
-  data?: T;
+	data?: T;
 
-  @IsString()
-  error?: string;
+	@IsString()
+	error?: string;
 
-  @IsString()
-  message?: string;
+	@IsString()
+	message?: string;
 
-  constructor(status: string, data?: T, error?: string, message?: string) {
-    this.status = status;
-    this.data = data;
-    this.error = error;
-    this.message = message;
-  }
+	constructor(status: string, data?: T, error?: string, message?: string) {
+		this.status = status;
+		this.data = data;
+		this.error = error;
+		this.message = message;
+	}
 }

@@ -2,15 +2,17 @@ import Position from './Position';
 import Board from './Board';
 import HelpingFunctions from './HelpingFunctions';
 import Move from './Move';
-import { Color } from './Constants';
+import { Color, FigureType } from './Constants';
 
 abstract class Figure {
 	protected color: Color;
 	protected currentPosition: Position;
+	readonly figureType: FigureType;  
 
-	constructor(color: Color, position: Position) {
+	constructor(color: Color, position: Position, figureType: FigureType) {
 		this.color = color;
 		this.currentPosition = position;
+		this.figureType = figureType;
 	}
 
 	getColor() {
@@ -31,19 +33,12 @@ abstract class Figure {
 
 	abstract reachablePositions(board: Board, moves: Move[]): Position[];
 
-	move(
-		position: Position,
-		reachablePositions: Position[],
-		moves: Move[],
-		board: Board,
-	): boolean {
+	move(position: Position, reachablePositions: Position[], moves: Move[], board: Board): boolean {
 		if (!HelpingFunctions.isReachablePosition(position, reachablePositions)) {
 			return false;
 		}
 		let boardHistory = board.getHistory();
-		boardHistory.addBoardHistory(
-			HelpingFunctions.deepCopyMatrix(board.getBoard()),
-		);
+		boardHistory.addBoardHistory(HelpingFunctions.deepCopyMatrix(board.getBoard()));
 		let path = HelpingFunctions.findPath(moves, position, this.currentPosition);
 		let move: Move;
 		for (let positionIndex = 0; positionIndex < path.length; positionIndex++) {
@@ -55,19 +50,12 @@ abstract class Figure {
 			let startPos = move.getStart();
 			let destPos = move.getDest();
 
-			HelpingFunctions.deleteAllfiguresBetweenGivenPositions(
-				startPos,
-				destPos,
-				board,
-			);
+			HelpingFunctions.deleteAllfiguresBetweenGivenPositions(startPos, destPos, board);
 			HelpingFunctions.swap(newRow, newColumn, row, column, board);
 		}
 		let figure = board.getBoard()[position.getRow()][position.getColumn()];
 		if (figure instanceof Figure) {
-			boardHistory.addStepHistory(
-				new Move(this.currentPosition, position),
-				board.getWhosTurn(),
-			);
+			boardHistory.addStepHistory(new Move(this.currentPosition, position), board.getWhosTurn());
 			this.setPosition(position);
 		}
 		return true;

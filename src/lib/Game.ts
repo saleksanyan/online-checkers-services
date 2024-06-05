@@ -11,7 +11,7 @@ import HelpingFunctions from './HelpingFunctions';
 
 class Game {
 	board: Board;
-	private currentFigure: Figure;
+	currentFigure: Figure;
 	private reachablePositionsOfCurrentFigure: Position[] | null;
 	private moves: Move[] = [];
 
@@ -21,18 +21,21 @@ class Game {
 		this.reachablePositionsOfCurrentFigure = null;
 	}
 
+	static fromJSON(json: any): Game {
+		return Object.assign(new Game(), json);
+	}
+
 	//example of move` 'a3'
-	pickAFigure(move: string): Position[] | null {
+	pickAFigure(currentPosition: string): Position[] | null {
 		this.assignToNull();
-		if (!Validations.isValidPosition(move, this.board)) {
+		if (!Validations.isValidPosition(currentPosition, this.board)) {
 			return null;
 		}
-		let position = new Position(move);
+		let position = new Position(currentPosition);
 		let figure = this.board.getBoard()[position.getRow()][position.getColumn()];
 		if (figure instanceof Figure) {
 			this.currentFigure = figure;
-			this.reachablePositionsOfCurrentFigure =
-				this.currentFigure.reachablePositions(this.board, this.moves);
+			this.reachablePositionsOfCurrentFigure = this.currentFigure.reachablePositions(this.board, this.moves);
 			return this.reachablePositionsOfCurrentFigure;
 		}
 
@@ -41,23 +44,14 @@ class Game {
 	//example of next move` 'b4'
 	makeTheNextMove(nextMove: string): boolean {
 		const nextPosition = new Position(nextMove);
-		if (
-			!Validations.placeIsEmpty(
-				nextPosition.getRow(),
-				nextPosition.getColumn(),
-				this.board,
-			)
-		) {
+		if (!Validations.placeIsEmpty(nextPosition.getRow(), nextPosition.getColumn(), this.board)) {
 			this.assignToNull();
 			return false;
 		}
 
 		let isPositionPresent = false;
 		this.reachablePositionsOfCurrentFigure?.forEach((pos) => {
-			if (
-				pos.getColumn() === nextPosition.getColumn() &&
-				pos.getRow() === nextPosition.getRow()
-			) {
+			if (pos.getColumn() === nextPosition.getColumn() && pos.getRow() === nextPosition.getRow()) {
 				isPositionPresent = true;
 			}
 		});
@@ -67,12 +61,7 @@ class Game {
 			return false;
 		}
 		if (this.currentFigure && this.reachablePositionsOfCurrentFigure) {
-			const doesMoveComplete = this.currentFigure.move(
-				nextPosition,
-				this.reachablePositionsOfCurrentFigure,
-				this.moves,
-				this.board,
-			);
+			const doesMoveComplete = this.currentFigure.move(nextPosition, this.reachablePositionsOfCurrentFigure, this.moves, this.board);
 			if (doesMoveComplete) {
 				this.board.changeTurn();
 				return true;

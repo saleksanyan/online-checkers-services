@@ -13,6 +13,10 @@ class History {
 		this.steps = [];
 	}
 
+	static fromJSON(obj: any): History {
+		return Object.assign(new History(), obj);
+	}
+
 	getBoardHistory() {
 		return this.boardHistory;
 	}
@@ -25,9 +29,7 @@ class History {
 		return this.boardHistory[indexFromBoardHistroy];
 	}
 
-	getByIndex(
-		indexFromBoardHistroy: number,
-	): (Figure | Color.EMPTY_PLACE)[][] | null {
+	getByIndex(indexFromBoardHistroy: number): (Figure | Color.EMPTY_PLACE)[][] | null {
 		if (indexFromBoardHistroy >= this.size || indexFromBoardHistroy < 0) {
 			return null;
 		}
