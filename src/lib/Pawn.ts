@@ -43,30 +43,16 @@ class Pawn extends Figure {
 		allDestinations: Position[],
 		moves: Move[],
 	): Position[] {
-		let reachablePositionsWithoutEating = [1, -1];
 
-		let reachablePositionsAfterEating = [2, -2];
-		let row = position.getRow();
-		let column = position.getColumn();
-		for (
-			let reachableRow = 0;
-			reachableRow < reachablePositionsWithoutEating.length;
-			reachableRow++
-		) {
-			for (
-				let reachableColumn = 0;
-				reachableColumn < reachablePositionsWithoutEating.length;
-				reachableColumn++
-			) {
+		let row = position.row ;
+		let column = position.column;
+		for (let reachableRow = 0; reachableRow < this.reachablePositionsWithoutEating.length; reachableRow++) {
+			for (let reachableColumn = 0; reachableColumn < this.reachablePositionsWithoutEating.length; reachableColumn++) {
+				let eatableFigureRow = this.reachablePositionsWithoutEating[reachableRow] + row;
+				let eatableFigureColumn = this.reachablePositionsWithoutEating[reachableColumn] + column;
+				let figuresNewRow = this.reachablePositionsAfterEating[reachableRow] + row;
+				let figuresNewColumn = this.reachablePositionsAfterEating[reachableColumn] + column;
 
-				let eatableFigureRow =
-					reachablePositionsWithoutEating[reachableRow] + row;
-				let eatableFigureColumn =
-					reachablePositionsWithoutEating[reachableColumn] + column;
-				let figuresNewRow =
-					reachablePositionsAfterEating[reachableRow] + row;
-				let figuresNewColumn =
-					reachablePositionsAfterEating[reachableColumn] + column;
 
 				if (Validations.isValidPlace(eatableFigureRow, eatableFigureColumn)) {
 					if (
@@ -87,6 +73,7 @@ class Pawn extends Figure {
 						Validations.placeIsEmpty(figuresNewRow, figuresNewColumn, board) &&
 						HelpingFunctions.wasNotRepeatedStap(allDestinations, figuresNewRow, figuresNewColumn)
 					) {
+						debugger
 						let figure = board.getBoard()[eatableFigureRow][eatableFigureColumn];
 
 						if (figure instanceof Figure && board.getWhosTurn() !== figure.getColor()) {

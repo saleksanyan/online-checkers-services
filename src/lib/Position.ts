@@ -2,6 +2,9 @@ import Constants, { BoardConstants } from './Constants';
 
 class Position {
 
+	row: number;
+	column: number;
+
 	toJSON() {
         return {
             __class: this.constructor.name,
@@ -13,14 +16,18 @@ class Position {
     static fromJSON(json: any) {
         return new Position(Position.getPositionUsingBoardPlaces(json.row, json.column));
     }
-	private row: number;
-	private column: number;
+
 
 	constructor(placeOnBoard: string) {
 		let placeToNum = parseInt(placeOnBoard.charAt(1));
 		this.row = 8 - placeToNum;
 		this.column = 0;
 		this.setColumnUsingLetters(placeOnBoard.charAt(0));
+	}
+
+	static fromJSON(obj: any): Position {
+		const pawn = obj as Position
+		return Object.assign(Position, obj);
 	}
 
 	getColumn() {

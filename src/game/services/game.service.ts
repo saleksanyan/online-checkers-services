@@ -72,7 +72,7 @@ export class GameService {
 		};
 		try {
 			await this.gameRepository.update(options, updateGameDto);
-			return this.findOne(updateGameDto.gameToken);
+			return this.findOne(initalGameToken);
 		} catch (error) {
 			throw new HttpException(ERROR_MESSAGE.concat(error.message), 500);
 		}
@@ -86,31 +86,29 @@ export class GameService {
 		await this.gameRepository.delete(options);
 	}
 
-	async pickAFigure(gameToken: string, startPosition: string): 
-			Promise<GameEntity> {
-		try {
-			const hashedGameToken = HashingService.hashData(gameToken); 
-			const gameResponse = await this.findOne(hashedGameToken);
-			if (!gameResponse.game) {
-				throw new HttpException(RESPONSE_MESSAGES.WRONG_POSITION, 400);;
+async pickAFigure(gameToken: string, currentPosition: string): Promise<GameEntity> {
+		try { 
+      const game = await this.findOne(gameToken);
+
+      const reachablePositionsOfTheFigure = game.game.pickAFigure(currentPosition)
+
+      if (!reachablePositionsOfTheFigure) {
+				throw new HttpException('Wrong Position', 400);
 			}
+      
+			const hashedGameToken = HashingService.hashData(gameToken);
 
-			let game = gameResponse.game;
-			let position = game.pickAFigure(startPosition);
-			if (position == null) {
-				throw new HttpException(RESPONSE_MESSAGES.PICK_FIGURE_FAIL, 500);
-			}
+			const gameDto = new UpdateGameDto();
+			gameDto.game = game.game;
+			gameDto.gameToken = hashedGameToken;
 
-			const updatedGameEntity = new GameEntity();
-			updatedGameEntity.game = game;
-			updatedGameEntity.gameToken = hashedGameToken;
-			await this.update(updatedGameEntity);
+			const resGame = await this.update(gameDto);
 
-			return updatedGameEntity;
+      console.log(resGame);      
 
+			return game;
 		} catch (error) {
-			console.error('Error picking a figure:', error);
-			throw new HttpException(ERROR_MESSAGE.concat(error.message), error.status);
+			throw new HttpException(error, error.status);
 		}
 	}
 
@@ -123,10 +121,11 @@ export class GameService {
 
 			const gameDto = new UpdateGameDto();
 			gameDto.game = game.game;
-
 			gameDto.gameToken = hashedGameToken;
 
-			this.update(gameDto);
+			const resGame = await this.update(gameDto);
+
+      console.log(resGame);      
 
 			return game;
 		} catch (error) {
@@ -134,25 +133,27 @@ export class GameService {
 		}
 	}
 
+	
+	async makeTheNextMove(gameToken: string, nextMove: string): Promise<void> {
+		try {
 
-	async makeTheNextMove(gameToken: string, nextMove: string): Promise<GameEntity> { 
-		try { 
-	   
-		 const game = await this.findOne(gameToken); 
-		 console.log(game);
-		 if (!game.game.makeTheNextMove(nextMove)) { 
-		  throw new HttpException('Wrong next move', 400); 
-		 } 
-	   
-		 const hashedGameToken = HashingService.hashData(gameToken); 
-	   
-		 const gameDto = new UpdateGameDto(); 
-		 gameDto.game = game.game; 
-		 gameDto.gameToken = hashedGameToken;
-		 this.update(gameDto); 
-		 return game;
-		} catch (error) { 
-		 throw new HttpException(error, error.status); 
-		} 
+			const game = await this.findOne(gameToken);
+      console.log(game);
+      
+			if (!game.game.makeTheNextMove(nextMove)) {
+				throw new HttpException('Wrong next move', 400);
+			}
+
+			const hashedGameToken = HashingService.hashData(gameToken);
+
+			const gameDto = new UpdateGameDto();
+			gameDto.game = game.game;
+			gameDto.gameToken = hashedGameToken;
+
+			this.update(gameDto);
+      
+		} catch (error) {
+			throw new HttpException(error, error.status);
+		}
 	}
 }
