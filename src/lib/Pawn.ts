@@ -32,9 +32,8 @@ class Pawn extends Figure {
 		allDestinations: Position[],
 		moves: Move[],
 	): Position[] {
-		let row = position.getRow();
-		let column = position.getColumn();
-
+		let row = position.row ;
+		let column = position.column;
 		for (let reachableRow = 0; reachableRow < this.reachablePositionsWithoutEating.length; reachableRow++) {
 			for (let reachableColumn = 0; reachableColumn < this.reachablePositionsWithoutEating.length; reachableColumn++) {
 				let eatableFigureRow = this.reachablePositionsWithoutEating[reachableRow] + row;
@@ -61,6 +60,7 @@ class Pawn extends Figure {
 						Validations.placeIsEmpty(figuresNewRow, figuresNewColumn, board) &&
 						HelpingFunctions.wasNotRepeatedStap(allDestinations, figuresNewRow, figuresNewColumn)
 					) {
+						debugger
 						let figure = board.getBoard()[eatableFigureRow][eatableFigureColumn];
 
 						if (figure instanceof Figure && board.getWhosTurn() !== figure.getColor()) {

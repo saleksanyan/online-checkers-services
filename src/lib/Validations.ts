@@ -2,8 +2,6 @@ import Position from './Position';
 import { BoardConstants, Color } from './Constants';
 import Board from './Board';
 import Figure from './Figure';
-import Queen from './Queen';
-import Pawn from './Pawn';
 
 class Validations {
 	public static isValidPlace(row: number, column: number): boolean {
@@ -24,9 +22,9 @@ class Validations {
 
 	public static notStepBack(figurColor: Color, row: number, currentPosition: Position) {
 		if (figurColor === Color.WHITE) {
-			return currentPosition.getRow() > row;
+			return currentPosition.row > row;
 		}
-		return currentPosition.getRow() < row;
+		return currentPosition.row < row;
 	}
 
 	public static placeIsEmpty(row: number, column: number, board: Board): boolean {

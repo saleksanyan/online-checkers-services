@@ -9,7 +9,6 @@ import { CreateGameDto } from '../dto/create-game.dto';
 import Game from 'src/lib/Game';
 import { HashingService } from 'src/helper/hashingService';
 import { UpdateGameDto } from '../dto/update-game.dto';
-import Position from 'src/lib/Position';
 
 @Injectable()
 export class GameService {
@@ -69,7 +68,7 @@ export class GameService {
 		};
 		try {
 			await this.gameRepository.update(options, updateGameDto);
-			return this.findOne(updateGameDto.gameToken);
+			return this.findOne(initalGameToken);
 		} catch (error) {
 			throw new HttpException(ERROR_MESSAGE.concat(error.message), 500);
 		}
@@ -92,7 +91,7 @@ export class GameService {
 
 			const gameDto = new UpdateGameDto();
 			gameDto.game = game.game;
-			game.gameToken = hashedGameToken;
+      gameDto.gameToken = hashedGameToken;
 
 			this.update(gameDto);
 
@@ -105,8 +104,9 @@ export class GameService {
 	async pickAFigure(gameToken: string, currentPosition: string): Promise<GameEntity> {
 		try { 
       const game = await this.findOne(gameToken);
+
       const reachablePositionsOfTheFigure = game.game.pickAFigure(currentPosition)
-      
+
       if (!reachablePositionsOfTheFigure) {
 				throw new HttpException('Wrong Position', 400);
 			}
@@ -115,9 +115,11 @@ export class GameService {
 
 			const gameDto = new UpdateGameDto();
 			gameDto.game = game.game;
-			game.gameToken = hashedGameToken;
+			gameDto.gameToken = hashedGameToken;
 
-			this.update(gameDto);
+			const resGame = await this.update(gameDto);
+
+      console.log(resGame);      
 
 			return game;
 		} catch (error) {
@@ -129,7 +131,8 @@ export class GameService {
 		try {
 
 			const game = await this.findOne(gameToken);
-
+      console.log(game);
+      
 			if (!game.game.makeTheNextMove(nextMove)) {
 				throw new HttpException('Wrong next move', 400);
 			}
@@ -138,7 +141,7 @@ export class GameService {
 
 			const gameDto = new UpdateGameDto();
 			gameDto.game = game.game;
-			game.gameToken = hashedGameToken;
+			gameDto.gameToken = hashedGameToken;
 
 			this.update(gameDto);
       
