@@ -1,4 +1,14 @@
+<<<<<<< addedAPI
+import {
+	Entity,
+	Column,
+	Index,
+	PrimaryGeneratedColumn,
+	ValueTransformer,
+} from 'typeorm';
+=======
 import { Entity, Column, Index, PrimaryGeneratedColumn, ValueTransformer } from 'typeorm';
+>>>>>>> main
 import Game from 'src/lib/Game';
 import Board from 'src/lib/Board';
 import History from 'src/lib/History';
@@ -11,6 +21,10 @@ function reviveInstance<T>(cls: new (...args: any[]) => T, json: any): T {
 	return Object.assign(new cls(), json);
 }
 const gameTransformer: ValueTransformer = {
+<<<<<<< addedAPI
+    to: (game: Game) => serializeGame(game),
+    from: (value: string) => deserializeGame(value),
+=======
 	to: (game: Game) => JSON.stringify(game),
 	from: (value: string) => {
 		const gamefromJson: Game = Game.fromJSON(JSON.parse(value));
@@ -32,7 +46,20 @@ const gameTransformer: ValueTransformer = {
 		}
 		return gamefromJson;
 	},
+>>>>>>> main
 };
+
+export default gameTransformer;
+
+function serializeGame(game: Game): string {
+    return JSON.stringify(game.toJSON());
+}
+
+function deserializeGame(json: string): Game {
+    const parsedObj = JSON.parse(json);
+    return Game.fromJSON(parsedObj);
+}
+
 
 @Entity()
 export class GameEntity {
@@ -46,3 +73,5 @@ export class GameEntity {
 	@Column({ type: 'json', transformer: gameTransformer })
 	game: Game;
 }
+
+

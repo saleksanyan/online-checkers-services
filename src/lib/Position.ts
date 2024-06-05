@@ -1,6 +1,18 @@
 import Constants, { BoardConstants } from './Constants';
 
 class Position {
+
+	toJSON() {
+        return {
+            __class: this.constructor.name,
+            row: this.row,
+            column: this.column,
+        };
+    }
+
+    static fromJSON(json: any) {
+        return new Position(Position.getPositionUsingBoardPlaces(json.row, json.column));
+    }
 	private row: number;
 	private column: number;
 

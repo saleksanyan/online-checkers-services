@@ -2,9 +2,12 @@ import Position from './Position';
 import Board from './Board';
 import HelpingFunctions from './HelpingFunctions';
 import Move from './Move';
-import { Color, FigureType } from './Constants';
+import { Color } from './Constants';
+import Pawn from './Pawn';
+import Queen from './Queen';
 
 abstract class Figure {
+	
 	protected color: Color;
 	protected currentPosition: Position;
 	readonly figureType: FigureType;  
@@ -15,8 +18,14 @@ abstract class Figure {
 		this.figureType = figureType;
 	}
 
+	abstract toJSON(): any;
+
 	getColor() {
 		return this.color;
+	}
+
+	setColor(color: Color){
+		this.color = color;
 	}
 
 	hasOppositeColor(otherFigure: Figure) {
@@ -32,8 +41,12 @@ abstract class Figure {
 	}
 
 	abstract reachablePositions(board: Board, moves: Move[]): Position[];
-
-	move(position: Position, reachablePositions: Position[], moves: Move[], board: Board): boolean {
+	move(
+		position: Position,
+		reachablePositions: Position[],
+		moves: Move[],
+		board: Board,
+	): boolean {
 		if (!HelpingFunctions.isReachablePosition(position, reachablePositions)) {
 			return false;
 		}
