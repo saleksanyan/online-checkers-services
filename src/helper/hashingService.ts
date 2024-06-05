@@ -9,8 +9,6 @@ export class HashingService {
 		const hashedData = this.hashData(data);
 		return hashedData === hash;
 	}
-<<<<<<< addedAPI
+
 }
-=======
-}
->>>>>>> main
+
