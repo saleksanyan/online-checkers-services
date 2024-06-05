@@ -48,8 +48,6 @@ class Pawn extends Figure {
 		let reachablePositionsAfterEating = [2, -2];
 		let row = position.getRow();
 		let column = position.getColumn();
-
-<<<<<<< addedAPI
 		for (
 			let reachableRow = 0;
 			reachableRow < reachablePositionsWithoutEating.length;
@@ -69,14 +67,6 @@ class Pawn extends Figure {
 					reachablePositionsAfterEating[reachableRow] + row;
 				let figuresNewColumn =
 					reachablePositionsAfterEating[reachableColumn] + column;
-=======
-		for (let reachableRow = 0; reachableRow < this.reachablePositionsWithoutEating.length; reachableRow++) {
-			for (let reachableColumn = 0; reachableColumn < this.reachablePositionsWithoutEating.length; reachableColumn++) {
-				let eatableFigureRow = this.reachablePositionsWithoutEating[reachableRow] + row;
-				let eatableFigureColumn = this.reachablePositionsWithoutEating[reachableColumn] + column;
-				let figuresNewRow = this.reachablePositionsAfterEating[reachableRow] + row;
-				let figuresNewColumn = this.reachablePositionsAfterEating[reachableColumn] + column;
->>>>>>> main
 
 				if (Validations.isValidPlace(eatableFigureRow, eatableFigureColumn)) {
 					if (
