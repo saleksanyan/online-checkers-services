@@ -11,9 +11,12 @@ class Validations {
 	public static isValidPosition(userInput: string, board: Board): boolean {
 		if (userInput.length !== 2) return false;
 		if (!this.isNumber(userInput.charAt(1))) return false;
+
 		let position = new Position(userInput);
+		console.log(board.getBoard()[position.getRow()][ position.getColumn()]);
 		let figure = board.getBoard()[position.getRow()][position.getColumn()];
 		let hasSameColor = false;
+		console.log(typeof figure)
 		if (figure instanceof Figure) {
 			hasSameColor = figure.getColor() === board.getWhosTurn();
 		}

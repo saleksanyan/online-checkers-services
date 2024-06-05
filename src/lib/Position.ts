@@ -1,8 +1,22 @@
 import Constants, { BoardConstants } from './Constants';
 
 class Position {
+
 	row: number;
 	column: number;
+
+	toJSON() {
+        return {
+            __class: this.constructor.name,
+            row: this.row,
+            column: this.column,
+        };
+    }
+
+    static fromJSON(json: any) {
+        return new Position(Position.getPositionUsingBoardPlaces(json.row, json.column));
+    }
+
 
 	constructor(placeOnBoard: string) {
 		let placeToNum = parseInt(placeOnBoard.charAt(1));
