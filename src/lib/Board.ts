@@ -13,30 +13,17 @@ class Board {
 	private whosTurn: Color.BLACK | Color.WHITE;
 
 	constructor() {
-<<<<<<< addedAPI
+
 		this.matrix = new Array(BoardConstants.ROWS)
 			.fill(Color.EMPTY_PLACE)
 			.map(() => new Array(BoardConstants.COLUMNS));
-=======
-		this.matrix = new Array(BoardConstants.ROWS).fill(null).map(() => new Array(BoardConstants.COLUMNS));
->>>>>>> main
+
 		this.history = new History();
 		HelpingFunctions.constructBoard(this.matrix);
 		this.whosTurn = Color.WHITE;
 		this.blackCounter = BoardConstants.PAWN_COUNT;
 		this.whiteCounter = BoardConstants.PAWN_COUNT;
 	}
-	// toJSON() {
-    //     return {
-    //         matrix: this.matrix.map(row => row.map(cell => 
-    //             cell !== Color.EMPTY_PLACE && cell instanceof Figure ? cell.serialize() : cell
-    //         )),
-    //         blackCounter: this.blackCounter,
-    //         whiteCounter: this.whiteCounter,
-    //         history: this.history.toJSON(),
-    //         whosTurn: this.whosTurn
-    //     };
-    // }
 
 
 	toJSON() {
