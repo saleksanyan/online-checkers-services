@@ -6,6 +6,7 @@ import {
 	Param,
 	Delete,
 	Patch,
+	BadRequestException,
 } from '@nestjs/common';
 import { GameService } from '../services/game.service';
 import { GameEntity } from '../entities/game.entity';
@@ -18,15 +19,17 @@ export class GameController {
 	constructor(private readonly gameService: GameService) {}
 
 	@Post()
-	async create(@Body() createGameDto: CreateGameDto): Promise<CustomResponse<GameEntity>> {
-    return this.gameService.create(createGameDto);
+	async create(
+		@Body() createGameDto: CreateGameDto,
+	): Promise<CustomResponse<GameEntity>> {
+		return this.gameService.create(createGameDto);
 	}
 	@Get()
 	async findAll(): Promise<GameEntity[]> {
 		return this.gameService.findAll();
 	}
 
-	@Get(':gameToken')
+	@Get(':game')
 	async findOne(@Param('gameToken') gameToken: string): Promise<GameEntity> {
 		return this.gameService.findOne(gameToken);
 	}
@@ -36,9 +39,17 @@ export class GameController {
 		return this.gameService.update(updateGameDto);
 	}
 
-	@Delete(':gameToken')
+	@Delete(':deleteGame')
 	async remove(@Param('gameToken') gameToken: string): Promise<void> {
 		return this.gameService.remove(gameToken);
 	}
 
+	@Patch(':gameToken/undoMove/:index')
+	async undoMove(@Param('gameToken') gameToken: string, @Param('index') index: string): Promise<GameEntity> {
+		const indexNumber = parseInt(index, 10);
+		if (isNaN(indexNumber)) {
+			throw new BadRequestException('Index must be a number');
+		}
+		return this.gameService.undoMove(gameToken, index);
+	}
 }
