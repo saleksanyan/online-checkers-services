@@ -11,6 +11,20 @@ class Queen extends Figure {
 	constructor(color: Color, position: Position) {
 		super(color, position);
 	}
+	
+	toJSON() {
+		let obj = {
+            __class: this.constructor.name,
+            color: this.color,
+            currentPosition: this.currentPosition.toJSON(),
+        }
+		console.log(obj);
+        return obj;
+    }
+
+	static fromJSON(json: any): Queen {
+        return new Queen(json.color, Position.fromJSON(json.currentPosition));
+    }
 
 	reachablePositions(board: Board, moves: Move[]): Position[] {
 		let visited = new Array(BoardConstants.ROWS)

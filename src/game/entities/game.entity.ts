@@ -1,9 +1,6 @@
 import {
 	Entity,
 	Column,
-	PrimaryColumn,
-	OneToOne,
-	JoinColumn,
 	Index,
 	PrimaryGeneratedColumn,
 	ValueTransformer,
@@ -11,9 +8,21 @@ import {
 import Game from 'src/lib/Game';
 
 const gameTransformer: ValueTransformer = {
-	to: (game: Game) => JSON.stringify(game),
-	from: (value: string) => JSON.parse(value) as Game,
+    to: (game: Game) => serializeGame(game),
+    from: (value: string) => deserializeGame(value),
 };
+
+export default gameTransformer;
+
+function serializeGame(game: Game): string {
+    return JSON.stringify(game.toJSON());
+}
+
+function deserializeGame(json: string): Game {
+    const parsedObj = JSON.parse(json);
+    return Game.fromJSON(parsedObj);
+}
+
 
 @Entity()
 export class GameEntity {
@@ -27,3 +36,5 @@ export class GameEntity {
 	@Column({ type: 'json', transformer: gameTransformer })
 	game: Game;
 }
+
+

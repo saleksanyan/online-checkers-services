@@ -3,8 +3,12 @@ import Board from './Board';
 import HelpingFunctions from './HelpingFunctions';
 import Move from './Move';
 import { Color } from './Constants';
+import Pawn from './Pawn';
+import Queen from './Queen';
+
 
 abstract class Figure {
+	
 	protected color: Color;
 	protected currentPosition: Position;
 
@@ -13,8 +17,14 @@ abstract class Figure {
 		this.currentPosition = position;
 	}
 
+	abstract toJSON(): any;
+
 	getColor() {
 		return this.color;
+	}
+
+	setColor(color: Color){
+		this.color = color;
 	}
 
 	hasOppositeColor(otherFigure: Figure) {
@@ -30,7 +40,6 @@ abstract class Figure {
 	}
 
 	abstract reachablePositions(board: Board, moves: Move[]): Position[];
-
 	move(
 		position: Position,
 		reachablePositions: Position[],

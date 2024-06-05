@@ -7,14 +7,25 @@ import Validations from './Validations';
 import HelpingFunctions from './HelpingFunctions';
 import Move from './Move';
 
-class Pawn extends Figure {
-	private readonly reachablePositionsWithoutEating = [1, -1];
 
-	private readonly reachablePositionsAfterEating = [2, -2];
+class Pawn extends Figure {
 
 	constructor(color: Color, currentPosition: Position) {
 		super(color, currentPosition);
 	}
+
+	toJSON() {
+		let obj = {
+            __class: this.constructor.name,
+            color: this.color,
+            currentPosition: this.currentPosition.toJSON(),
+        }
+        return obj;
+    }
+
+	static fromJSON(json: any): Pawn {
+        return new Pawn(json.color, Position.fromJSON(json.currentPosition));
+    }
 
 	reachablePositions(board: Board, moves: Move[]): Position[] {
 		return this.allDestinations(this.currentPosition, board, false, [], moves);
@@ -27,27 +38,31 @@ class Pawn extends Figure {
 		allDestinations: Position[],
 		moves: Move[],
 	): Position[] {
+		let reachablePositionsWithoutEating = [1, -1];
+
+		let reachablePositionsAfterEating = [2, -2];
 		let row = position.getRow();
 		let column = position.getColumn();
 
 		for (
 			let reachableRow = 0;
-			reachableRow < this.reachablePositionsWithoutEating.length;
+			reachableRow < reachablePositionsWithoutEating.length;
 			reachableRow++
 		) {
 			for (
 				let reachableColumn = 0;
-				reachableColumn < this.reachablePositionsWithoutEating.length;
+				reachableColumn < reachablePositionsWithoutEating.length;
 				reachableColumn++
 			) {
+
 				let eatableFigureRow =
-					this.reachablePositionsWithoutEating[reachableRow] + row;
+					reachablePositionsWithoutEating[reachableRow] + row;
 				let eatableFigureColumn =
-					this.reachablePositionsWithoutEating[reachableColumn] + column;
+					reachablePositionsWithoutEating[reachableColumn] + column;
 				let figuresNewRow =
-					this.reachablePositionsAfterEating[reachableRow] + row;
+					reachablePositionsAfterEating[reachableRow] + row;
 				let figuresNewColumn =
-					this.reachablePositionsAfterEating[reachableColumn] + column;
+					reachablePositionsAfterEating[reachableColumn] + column;
 
 				if (Validations.isValidPlace(eatableFigureRow, eatableFigureColumn)) {
 					if (

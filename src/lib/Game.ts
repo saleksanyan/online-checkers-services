@@ -8,12 +8,14 @@ import Figure from './Figure';
 import Move from './Move';
 import History from './History';
 import HelpingFunctions from './HelpingFunctions';
+import Pawn from './Pawn';
+import Queen from './Queen';
 
 class Game {
 	board: Board;
-	private currentFigure: Figure;
-	private reachablePositionsOfCurrentFigure: Position[] | null;
-	private moves: Move[] = [];
+	currentFigure: Figure;
+	reachablePositionsOfCurrentFigure: Position[] | null;
+	moves: Move[] = [];
 
 	constructor() {
 		this.board = new Board();
@@ -21,15 +23,70 @@ class Game {
 		this.reachablePositionsOfCurrentFigure = null;
 	}
 
+	
+	toJSON() {
+        let serializedReachablePositions = null;
+        if (this.reachablePositionsOfCurrentFigure) {
+            serializedReachablePositions = [];
+            for (let i = 0; i < this.reachablePositionsOfCurrentFigure.length; i++) {
+                serializedReachablePositions.push(this.reachablePositionsOfCurrentFigure[i].toJSON());
+            }
+        }
+
+        let serializedMoves = [];
+        for (let j = 0; j < this.moves.length; j++) {
+            serializedMoves.push(this.moves[j].toJSON());
+        }
+
+        return {
+            __class: 'Game',
+            board: this.board.toJSON(),
+            currentFigure: this.currentFigure ? this.currentFigure.toJSON() : null,
+            reachablePositionsOfCurrentFigure: serializedReachablePositions,
+            moves: serializedMoves,
+        };
+    }
+
+    static fromJSON(json: any): Game {
+        let game = new Game();
+        game.board = Board.fromJSON(json.board);
+		if(json.currentFigure != null){
+			if(json.currentFigure.__class == 'Pawn'){
+				game.currentFigure = Pawn.fromJSON(json.currentFigure); 
+			}else{
+				game.currentFigure = Queen.fromJSON(json.currentFigure);
+			}
+		}else{
+        	game.currentFigure =  null;
+		}
+        let deserializedReachablePositions = null;
+        if (json.reachablePositionsOfCurrentFigure) {
+            deserializedReachablePositions = [];
+            for (let i = 0; i < json.reachablePositionsOfCurrentFigure.length; i++) {
+                deserializedReachablePositions.
+				push(Position.fromJSON(json.reachablePositionsOfCurrentFigure[i]));
+            }
+        }
+        game.reachablePositionsOfCurrentFigure = deserializedReachablePositions;
+
+        let deserializedMoves = [];
+        for (let j = 0; j < json.moves.length; j++) {
+            deserializedMoves.push(Move.fromJSON(json.moves[j]));
+        }
+        game.moves = deserializedMoves;
+
+        return game;
+    }
 	//example of move` 'a3'
-	pickAFigure(move: string): Position[] | null {
+	pickAFigure(startPosition: string): Position[] | null {
 		this.assignToNull();
-		if (!Validations.isValidPosition(move, this.board)) {
+
+		if (!Validations.isValidPosition(startPosition, this.board)) {
 			return null;
 		}
-		let position = new Position(move);
+		let position = new Position(startPosition);
 		let figure = this.board.getBoard()[position.getRow()][position.getColumn()];
-		if (figure instanceof Figure) {
+		if (figure instanceof Figure) { 
 			this.currentFigure = figure;
 			this.reachablePositionsOfCurrentFigure =
 				this.currentFigure.reachablePositions(this.board, this.moves);
@@ -84,11 +141,6 @@ class Game {
 
 	getBoardHistory(): History {
 		return this.board.getHistory();
-	}
-
-	goToPreviousStepByIndex(index: number) {
-		const history = this.board.getHistory();
-		const prevBoard = history.getByIndex(index);
 	}
 
 	undoMove(index: string): boolean {
