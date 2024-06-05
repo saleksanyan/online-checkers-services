@@ -1,11 +1,17 @@
 // import { NestFactory } from '@nestjs/core';
 // import { AppModule } from './app.module';
+// import * as dotenv from 'dotenv'
+
+// dotenv.config();
 
 // async function bootstrap() {
 //   const app = await NestFactory.create(AppModule);
-//   await app.listen(3000);
+//   app.enableCors()
+//   await app.listen(process.env.APP_PORT);
 // }
 // bootstrap();
+
+//With Swagger
 
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
@@ -33,6 +39,5 @@ async function bootstrap() {
 	SwaggerModule.setup('api', app, document);
 
 	await app.listen(3000);
-
 }
 bootstrap();

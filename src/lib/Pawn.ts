@@ -1,6 +1,6 @@
 import Figure from './Figure';
 import Position from './Position';
-import { Color } from './Constants';
+import { Color, FigureType } from './Constants';
 
 import Board from './Board';
 import Validations from './Validations';
@@ -11,7 +11,12 @@ import Move from './Move';
 class Pawn extends Figure {
 
 	constructor(color: Color, currentPosition: Position) {
-		super(color, currentPosition);
+		super(color, currentPosition, FigureType.PAWN);
+	}
+
+	static fromJSON(obj: any): Pawn {
+		const pawn = obj as Pawn
+		return Object.assign(new Pawn(pawn.color, pawn.currentPosition), obj);
 	}
 
 	toJSON() {
@@ -44,6 +49,7 @@ class Pawn extends Figure {
 		let row = position.getRow();
 		let column = position.getColumn();
 
+<<<<<<< addedAPI
 		for (
 			let reachableRow = 0;
 			reachableRow < reachablePositionsWithoutEating.length;
@@ -63,82 +69,43 @@ class Pawn extends Figure {
 					reachablePositionsAfterEating[reachableRow] + row;
 				let figuresNewColumn =
 					reachablePositionsAfterEating[reachableColumn] + column;
+=======
+		for (let reachableRow = 0; reachableRow < this.reachablePositionsWithoutEating.length; reachableRow++) {
+			for (let reachableColumn = 0; reachableColumn < this.reachablePositionsWithoutEating.length; reachableColumn++) {
+				let eatableFigureRow = this.reachablePositionsWithoutEating[reachableRow] + row;
+				let eatableFigureColumn = this.reachablePositionsWithoutEating[reachableColumn] + column;
+				let figuresNewRow = this.reachablePositionsAfterEating[reachableRow] + row;
+				let figuresNewColumn = this.reachablePositionsAfterEating[reachableColumn] + column;
+>>>>>>> main
 
 				if (Validations.isValidPlace(eatableFigureRow, eatableFigureColumn)) {
 					if (
-						Validations.placeIsEmpty(
-							eatableFigureRow,
-							eatableFigureColumn,
-							board,
-						) &&
+						Validations.placeIsEmpty(eatableFigureRow, eatableFigureColumn, board) &&
 						!afterEating &&
-						Validations.notStepBack(
-							this.getColor(),
-							eatableFigureRow,
-							this.currentPosition,
-						)
+						Validations.notStepBack(this.getColor(), eatableFigureRow, this.currentPosition)
 					) {
-						HelpingFunctions.addingPositionToArray(
-							eatableFigureRow,
-							eatableFigureColumn,
-							allDestinations,
-						);
+						HelpingFunctions.addingPositionToArray(eatableFigureRow, eatableFigureColumn, allDestinations);
 						moves.push(
 							new Move(
 								position,
-								new Position(
-									Position.getPositionUsingBoardPlaces(
-										eatableFigureRow,
-										eatableFigureColumn,
-									),
-								),
+								new Position(Position.getPositionUsingBoardPlaces(eatableFigureRow, eatableFigureColumn)),
 							),
 						);
 					} else if (
-						!Validations.placeIsEmpty(
-							eatableFigureRow,
-							eatableFigureColumn,
-							board,
-						) &&
+						!Validations.placeIsEmpty(eatableFigureRow, eatableFigureColumn, board) &&
 						Validations.isValidPlace(figuresNewRow, figuresNewColumn) &&
 						Validations.placeIsEmpty(figuresNewRow, figuresNewColumn, board) &&
-						HelpingFunctions.wasNotRepeatedStap(
-							allDestinations,
-							figuresNewRow,
-							figuresNewColumn,
-						)
+						HelpingFunctions.wasNotRepeatedStap(allDestinations, figuresNewRow, figuresNewColumn)
 					) {
-						let figure =
-							board.getBoard()[eatableFigureRow][eatableFigureColumn];
+						let figure = board.getBoard()[eatableFigureRow][eatableFigureColumn];
 
-						if (
-							figure instanceof Figure &&
-							board.getWhosTurn() !== figure.getColor()
-						) {
-							let nextPos = HelpingFunctions.addingPositionToArray(
-								figuresNewRow,
-								figuresNewColumn,
-								allDestinations,
-							);
+						if (figure instanceof Figure && board.getWhosTurn() !== figure.getColor()) {
+							let nextPos = HelpingFunctions.addingPositionToArray(figuresNewRow, figuresNewColumn, allDestinations);
 							moves.push(
-								new Move(
-									position,
-									new Position(
-										Position.getPositionUsingBoardPlaces(
-											figuresNewRow,
-											figuresNewColumn,
-										),
-									),
-								),
+								new Move(position, new Position(Position.getPositionUsingBoardPlaces(figuresNewRow, figuresNewColumn))),
 							);
 
-							this.allDestinations(
-								nextPos,
-								board,
-								true,
-								allDestinations,
-								moves,
-							);
+							this.allDestinations(nextPos, board, true, allDestinations, moves);
 						}
 					}
 				}

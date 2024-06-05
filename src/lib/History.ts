@@ -50,9 +50,7 @@ class History {
 		return this.boardHistory[indexFromBoardHistroy];
 	}
 
-	getByIndex(
-		indexFromBoardHistroy: number,
-	): (Figure | Color.EMPTY_PLACE)[][] | null {
+	getByIndex(indexFromBoardHistroy: number): (Figure | Color.EMPTY_PLACE)[][] | null {
 		if (indexFromBoardHistroy >= this.size || indexFromBoardHistroy < 0) {
 			return null;
 		}

@@ -1,4 +1,5 @@
 export const RESPONSE_MESSAGES = {
+
     CREATE_GAME_SUCCESS: 'Game successfully created',
     CREATE_GAME_FAIL: 'Failed to create game',
     GAME_EXISTS: 'Game already exists',
@@ -10,6 +11,4 @@ export const RESPONSE_MESSAGES = {
     PICK_FIGURE_SUCCESS: 'Found the figure',
     INTERNAL_SERVER_ERROR: 'Was not able to pick a position',
     WRONG_POSITION: 'Wrong position'
-    
-  }
-  
+}

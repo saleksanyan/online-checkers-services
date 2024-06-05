@@ -9,13 +9,17 @@ class Board {
 	private matrix: (Figure | Color.EMPTY_PLACE)[][];
 	private blackCounter: number;
 	private whiteCounter: number;
-	private history: History;
+	history: History;
 	private whosTurn: Color.BLACK | Color.WHITE;
 
 	constructor() {
+<<<<<<< addedAPI
 		this.matrix = new Array(BoardConstants.ROWS)
 			.fill(Color.EMPTY_PLACE)
 			.map(() => new Array(BoardConstants.COLUMNS));
+=======
+		this.matrix = new Array(BoardConstants.ROWS).fill(null).map(() => new Array(BoardConstants.COLUMNS));
+>>>>>>> main
 		this.history = new History();
 		HelpingFunctions.constructBoard(this.matrix);
 		this.whosTurn = Color.WHITE;
@@ -79,6 +83,10 @@ class Board {
         board.whosTurn = json.whosTurn;
         return board;
     }
+
+	static fromJSON(json: any): Board {
+		return Object.assign(new Board(), json);
+	}
 
 	decrementWhiteCounter() {
 		this.whiteCounter--;

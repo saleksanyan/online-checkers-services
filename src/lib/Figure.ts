@@ -6,15 +6,16 @@ import { Color } from './Constants';
 import Pawn from './Pawn';
 import Queen from './Queen';
 
-
 abstract class Figure {
 	
 	protected color: Color;
 	protected currentPosition: Position;
+	readonly figureType: FigureType;  
 
-	constructor(color: Color, position: Position) {
+	constructor(color: Color, position: Position, figureType: FigureType) {
 		this.color = color;
 		this.currentPosition = position;
+		this.figureType = figureType;
 	}
 
 	abstract toJSON(): any;
@@ -50,9 +51,7 @@ abstract class Figure {
 			return false;
 		}
 		let boardHistory = board.getHistory();
-		boardHistory.addBoardHistory(
-			HelpingFunctions.deepCopyMatrix(board.getBoard()),
-		);
+		boardHistory.addBoardHistory(HelpingFunctions.deepCopyMatrix(board.getBoard()));
 		let path = HelpingFunctions.findPath(moves, position, this.currentPosition);
 		let move: Move;
 		for (let positionIndex = 0; positionIndex < path.length; positionIndex++) {
@@ -64,19 +63,12 @@ abstract class Figure {
 			let startPos = move.getStart();
 			let destPos = move.getDest();
 
-			HelpingFunctions.deleteAllfiguresBetweenGivenPositions(
-				startPos,
-				destPos,
-				board,
-			);
+			HelpingFunctions.deleteAllfiguresBetweenGivenPositions(startPos, destPos, board);
 			HelpingFunctions.swap(newRow, newColumn, row, column, board);
 		}
 		let figure = board.getBoard()[position.getRow()][position.getColumn()];
 		if (figure instanceof Figure) {
-			boardHistory.addStepHistory(
-				new Move(this.currentPosition, position),
-				board.getWhosTurn(),
-			);
+			boardHistory.addStepHistory(new Move(this.currentPosition, position), board.getWhosTurn());
 			this.setPosition(position);
 		}
 		return true;

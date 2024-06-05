@@ -14,8 +14,13 @@ import Queen from './Queen';
 class Game {
 	board: Board;
 	currentFigure: Figure;
+<<<<<<< addedAPI
 	reachablePositionsOfCurrentFigure: Position[] | null;
 	moves: Move[] = [];
+=======
+	private reachablePositionsOfCurrentFigure: Position[] | null;
+	private moves: Move[] = [];
+>>>>>>> main
 
 	constructor() {
 		this.board = new Board();
@@ -23,6 +28,7 @@ class Game {
 		this.reachablePositionsOfCurrentFigure = null;
 	}
 
+<<<<<<< addedAPI
 	
 	toJSON() {
         let serializedReachablePositions = null;
@@ -85,11 +91,23 @@ class Game {
 			return null;
 		}
 		let position = new Position(startPosition);
+=======
+	static fromJSON(json: any): Game {
+		return Object.assign(new Game(), json);
+	}
+
+	//example of move` 'a3'
+	pickAFigure(currentPosition: string): Position[] | null {
+		this.assignToNull();
+		if (!Validations.isValidPosition(currentPosition, this.board)) {
+			return null;
+		}
+		let position = new Position(currentPosition);
+>>>>>>> main
 		let figure = this.board.getBoard()[position.getRow()][position.getColumn()];
 		if (figure instanceof Figure) { 
 			this.currentFigure = figure;
-			this.reachablePositionsOfCurrentFigure =
-				this.currentFigure.reachablePositions(this.board, this.moves);
+			this.reachablePositionsOfCurrentFigure = this.currentFigure.reachablePositions(this.board, this.moves);
 			return this.reachablePositionsOfCurrentFigure;
 		}
 
@@ -98,23 +116,14 @@ class Game {
 	//example of next move` 'b4'
 	makeTheNextMove(nextMove: string): boolean {
 		const nextPosition = new Position(nextMove);
-		if (
-			!Validations.placeIsEmpty(
-				nextPosition.getRow(),
-				nextPosition.getColumn(),
-				this.board,
-			)
-		) {
+		if (!Validations.placeIsEmpty(nextPosition.getRow(), nextPosition.getColumn(), this.board)) {
 			this.assignToNull();
 			return false;
 		}
 
 		let isPositionPresent = false;
 		this.reachablePositionsOfCurrentFigure?.forEach((pos) => {
-			if (
-				pos.getColumn() === nextPosition.getColumn() &&
-				pos.getRow() === nextPosition.getRow()
-			) {
+			if (pos.getColumn() === nextPosition.getColumn() && pos.getRow() === nextPosition.getRow()) {
 				isPositionPresent = true;
 			}
 		});
@@ -124,12 +133,7 @@ class Game {
 			return false;
 		}
 		if (this.currentFigure && this.reachablePositionsOfCurrentFigure) {
-			const doesMoveComplete = this.currentFigure.move(
-				nextPosition,
-				this.reachablePositionsOfCurrentFigure,
-				this.moves,
-				this.board,
-			);
+			const doesMoveComplete = this.currentFigure.move(nextPosition, this.reachablePositionsOfCurrentFigure, this.moves, this.board);
 			if (doesMoveComplete) {
 				this.board.changeTurn();
 				return true;

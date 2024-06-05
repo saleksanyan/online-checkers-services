@@ -1,7 +1,12 @@
 export enum Color {
 	WHITE = 'w',
 	BLACK = 'b',
-	EMPTY_PLACE = ' ',
+	EMPTY_PLACE = ' '
+}
+
+export enum FigureType {
+	PAWN = 'P',
+	QUEEN = 'Q'
 }
 
 export enum BoardConstants {
@@ -27,16 +32,7 @@ export class Constants {
 		h: 7,
 	};
 
-	public static readonly COLUMNS_TO_LETTERS = [
-		'a',
-		'b',
-		'c',
-		'd',
-		'e',
-		'f',
-		'g',
-		'h',
-	];
+	public static readonly COLUMNS_TO_LETTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 }
 
 export default Constants;
