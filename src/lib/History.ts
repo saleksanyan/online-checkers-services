@@ -1,6 +1,8 @@
 import { Color } from './Constants';
 import Figure from './Figure';
 import Move from './Move';
+import Pawn from './Pawn';
+import Queen from './Queen';
 
 class History {
 	
@@ -18,9 +20,14 @@ class History {
         const history = new History();
         history.boardHistory = json.boardHistory.map((snapshot: any) =>
             snapshot.map((row: any) => row.map((cell: any) => 
-               { if(cell != undefined && cell.__class != undefined) {return cell.fromJSON(cell)}
-				else {return cell}
-			   }
+				{ if(cell !== Color.EMPTY_PLACE && cell != undefined){ 
+						if(cell.__class == 'Pawn'){
+							return Pawn.fromJSON(cell);
+						}else{
+							return Queen.fromJSON(cell);
+						}
+					}else{ return cell};
+			  	}
             ))
         );
         history.size = json.size;

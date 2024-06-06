@@ -3,8 +3,7 @@ import Board from './Board';
 import HelpingFunctions from './HelpingFunctions';
 import Move from './Move';
 import { Color } from './Constants';
-import Pawn from './Pawn';
-import Queen from './Queen';
+
 
 
 abstract class Figure {
@@ -46,6 +45,8 @@ abstract class Figure {
 		moves: Move[],
 		board: Board,
 	): boolean {
+		
+				
 		if (!HelpingFunctions.isReachablePosition(position, reachablePositions)) {
 			return false;
 		}
@@ -74,10 +75,10 @@ abstract class Figure {
 		let figure = board.getBoard()[position.getRow()][position.getColumn()];
 		if (figure instanceof Figure) {
 			boardHistory.addStepHistory(
-				new Move(this.currentPosition, position),
+				new Move(figure.currentPosition, position),
 				board.getWhosTurn(),
 			);
-			this.setPosition(position);
+			figure.setPosition(position);
 		}
 		return true;
 	}

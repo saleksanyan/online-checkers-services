@@ -80,16 +80,18 @@ class Game {
 	//example of move` 'a3'
 	pickAFigure(startPosition: string): Position[] | null {
 		this.assignToNull();
-
 		if (!Validations.isValidPosition(startPosition, this.board)) {
 			return null;
 		}
 		let position = new Position(startPosition);
+		
 		let figure = this.board.getBoard()[position.getRow()][position.getColumn()];
+		
 		if (figure instanceof Figure) { 
 			this.currentFigure = figure;
 			this.reachablePositionsOfCurrentFigure =
 				this.currentFigure.reachablePositions(this.board, this.moves);
+				
 			return this.reachablePositionsOfCurrentFigure;
 		}
 
@@ -110,6 +112,7 @@ class Game {
 		}
 
 		let isPositionPresent = false;
+		
 		this.reachablePositionsOfCurrentFigure?.forEach((pos) => {
 			if (
 				pos.getColumn() === nextPosition.getColumn() &&
@@ -118,6 +121,7 @@ class Game {
 				isPositionPresent = true;
 			}
 		});
+
 
 		if (!isPositionPresent) {
 			this.assignToNull();
@@ -135,7 +139,6 @@ class Game {
 				return true;
 			}
 		}
-
 		return false;
 	}
 

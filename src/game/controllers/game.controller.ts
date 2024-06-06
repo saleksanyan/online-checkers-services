@@ -12,7 +12,7 @@ import { GameService } from '../services/game.service';
 import { GameEntity } from '../entities/game.entity';
 import { CreateGameDto } from '../dto/create-game.dto';
 import { UpdateGameDto } from '../dto/update-game.dto';
-import { CustomResponse } from 'src/helper/costumResponse';
+import { CustomResponse } from 'src/helper/customResponse';
 @Controller('games')
 export class GameController {
 	constructor(private readonly gameService: GameService) {}
@@ -45,17 +45,18 @@ export class GameController {
 
 	@Patch(':gameToken/pickAFigure/:position')
 	async pickAFigure( @Param('gameToken') gameToken: string, 
-		@Param('position') position: string ): Promise<GameEntity> {
+		@Param('position') position: string ): Promise<CustomResponse<GameEntity>> {
 		return this.gameService.pickAFigure(gameToken, position);
 	}
 
 	@Patch(':gameToken/undoMove/:index') 
-	async undoMove(@Param('gameToken') gameToken: string, @Query('index') index: string): Promise<GameEntity> { 
+	async undoMove(@Param('gameToken') gameToken: string, @Param('index') index: string): Promise<GameEntity> { 
 	return this.gameService.undoMove(gameToken, index); 
  	} 
 
-	@Patch(':gameToken/makeTheNextMove/:makeTheNextMove/') 
-	async makeTheNextMove(@Param('gameToken') gameToken: string, @Query('nextStep') nextStep: string): Promise<GameEntity> { 
+	@Patch(':gameToken/makeTheNextMove/:nextStep/') 
+	async makeTheNextMove(@Param('gameToken') gameToken: string,
+	 @Param('nextStep') nextStep: string): Promise<UpdateGameDto> { 
 		return this.gameService.makeTheNextMove(gameToken, nextStep); 
 	}
 }

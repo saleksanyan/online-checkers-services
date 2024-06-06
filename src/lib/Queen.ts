@@ -18,7 +18,6 @@ class Queen extends Figure {
             color: this.color,
             currentPosition: this.currentPosition.toJSON(),
         }
-		console.log(obj);
         return obj;
     }
 

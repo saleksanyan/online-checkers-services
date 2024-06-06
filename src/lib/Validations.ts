@@ -3,6 +3,7 @@ import { BoardConstants, Color } from './Constants';
 import Board from './Board';
 import Figure from './Figure';
 import Pawn from './Pawn';
+import { log } from 'console';
 
 class Validations {
 	public static isValidPlace(row: number, column: number): boolean {
@@ -19,7 +20,7 @@ class Validations {
 		if (!this.isNumber(userInput.charAt(1))) return false;
 
 		let position = new Position(userInput);
-		console.log(board.getBoard()[position.getRow()][ position.getColumn()]);
+		
 		let figure = board.getBoard()[position.getRow()][position.getColumn()];
 		let hasSameColor = false;
 		console.log(typeof figure)

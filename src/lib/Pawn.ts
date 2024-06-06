@@ -38,8 +38,9 @@ class Pawn extends Figure {
 		allDestinations: Position[],
 		moves: Move[],
 	): Position[] {
+		
+		
 		let reachablePositionsWithoutEating = [1, -1];
-
 		let reachablePositionsAfterEating = [2, -2];
 		let row = position.getRow();
 		let column = position.getColumn();
@@ -63,7 +64,7 @@ class Pawn extends Figure {
 					reachablePositionsAfterEating[reachableRow] + row;
 				let figuresNewColumn =
 					reachablePositionsAfterEating[reachableColumn] + column;
-
+				
 				if (Validations.isValidPlace(eatableFigureRow, eatableFigureColumn)) {
 					if (
 						Validations.placeIsEmpty(
@@ -144,7 +145,7 @@ class Pawn extends Figure {
 				}
 			}
 		}
-
+		
 		return allDestinations;
 	}
 
