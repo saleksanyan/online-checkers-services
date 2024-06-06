@@ -106,7 +106,7 @@ export class GameService {
 			let game = gameResponse.game;
 			let position = game.pickAFigure(startPosition);
 			if (position == null) {
-				throw new HttpException(RESPONSE_MESSAGES.WRONG_POSITION, 500);
+				throw new HttpException(RESPONSE_MESSAGES.WRONG_POSITION, 400);
 			}
 
 			const updatedGameEntity = new GameEntity();
@@ -133,11 +133,9 @@ export class GameService {
 		
 			const gameDto = new UpdateGameDto(); 
 			gameDto.game = game.game; 
-			gameDto.gameToken = gameToken; 
-			
-			this.update(gameDto); 
+			gameDto.gameToken = gameToken;  
 		
-			return game; 
+			return await this.update(gameDto);; 
 			} catch (error) { 
 			throw new HttpException(error, error.status); 
 		} 
@@ -147,14 +145,13 @@ export class GameService {
 		try { 
 			const game = await this.findOne(gameToken); 
 			if (game == null || !game.game.makeTheNextMove(nextMove)){ 
-				throw new HttpException('Wrong next move', 500); 
+				throw new HttpException('Wrong next move', 400); 
 			}
 			const gameDto = new UpdateGameDto(); 
 			gameDto.game = game.game; 
 			gameDto.gameToken = gameToken; 
-			
-			this.update(gameDto); 
-			return game;
+
+			return await this.update(gameDto);
 		} catch (error) { 
 		 throw new HttpException(error, error.status); 
 		}
