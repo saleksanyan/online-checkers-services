@@ -83,8 +83,10 @@ export class GameService {
 		}
 	}
 
-	async remove(gameToken: string): Promise<void> {
-		await this.gameRepository.delete(gameToken);
+	async remove(gameToken: string): Promise<GameEntity> {
+		let game = this.findOne(gameToken);
+		await this.gameRepository.delete((await game).id);
+		return game;
 	}
 
 	async pickAFigure(gameToken: string, startPosition: string): 

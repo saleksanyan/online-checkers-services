@@ -39,7 +39,7 @@ export class GameController {
 	}
 
 	@Delete(':gameToken')
-	async remove(@Param('gameToken') gameToken: string): Promise<void> {
+	async remove(@Param('gameToken') gameToken: string): Promise<GameEntity> {
 		return this.gameService.remove(gameToken);
 	}
 
