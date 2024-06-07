@@ -19,7 +19,6 @@ dotenv.config();
 			envFilePath: `.env`,
 		}),
 		TypeOrmModule.forFeature([GameEntity, PlayerEntity]),
-		
 		TypeOrmModule.forRoot({
 			type: 'postgres',
 			host: process.env.DB_HOST,

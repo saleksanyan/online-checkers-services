@@ -13,11 +13,12 @@ import { AuthService } from 'src/auth/auth.service';
     TypeOrmModule.forFeature([GameEntity, PlayerEntity]),
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY,
-      signOptions: { expiresIn: '24h' },
+      signOptions: { expiresIn: '1h' },
     }),
   ],
   controllers: [GameController],
   providers: [GameService, JwtService, AuthService],
+  exports: [JwtService]
 })
 export class GameModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
