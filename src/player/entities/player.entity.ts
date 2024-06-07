@@ -10,7 +10,7 @@ export class PlayerEntity {
 	id: string = uuidv4();
 
 	@ManyToOne(() => GameEntity, (game) => game.id)
-	gameID: string;
+	game: GameEntity;
 
 	@Column({ nullable: false })
 	jwtPlayer: string;
