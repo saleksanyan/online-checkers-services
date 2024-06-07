@@ -1,13 +1,15 @@
-import { Controller, Get, Post, Body, Param, Delete, Patch, Query } from '@nestjs/common';
+import { Controller, Get, Body, Param, Delete, Patch } from '@nestjs/common';
 import { GameService } from '../services/game.service';
 import { GameEntity } from '../entities/game.entity';
 import { UpdateGameDto } from '../dto/update-game.dto';
 import { CustomResponse } from 'src/helper/customResponse';
 import { PlayerEntity } from 'src/player/entities/player.entity';
+import { Public } from 'src/helper/public.decorator';
 @Controller('games')
 export class GameController {
 	constructor(private readonly gameService: GameService) {}
 
+	@Public()
 	@Get('NewGame')
 	async create(): Promise<PlayerEntity> {
 		return this.gameService.create();
@@ -47,3 +49,5 @@ export class GameController {
 		return this.gameService.makeTheNextMove(gameToken, nextStep);
 	}
 }
+
+

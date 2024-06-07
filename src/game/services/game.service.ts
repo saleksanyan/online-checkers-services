@@ -24,10 +24,16 @@ export class GameService {
 	async create(): Promise<PlayerEntity> {
 		let createGameDto = new CreateGameDto();
 		createGameDto.game = new Game();
+		console.log("player.jwtPlayer22");
+
 		const newGame = this.gameRepository.create(createGameDto);
 		let player = this.playerRepository.create();
 		player.game = newGame;
+		console.log(player.id );
+
 		player.jwtPlayer = this.jwtService.sign({ playerId: player.id });
+		console.log(player.jwtPlayer);
+		
 		try {
 			await this.gameRepository.save(newGame);
 			await this.playerRepository.save(player);

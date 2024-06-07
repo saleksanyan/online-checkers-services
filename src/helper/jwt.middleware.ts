@@ -4,22 +4,27 @@ import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class JwtMiddleware implements NestMiddleware {
-	use(req: Request, res: Response, next: NextFunction) {
-		const authHeader = req.headers.authorization;
+  use(req: Request, res: Response, next: NextFunction) {
+    const authHeader = req.headers.authorization;
+    console.log(req.headers); // Log headers to verify
 
-		if (!authHeader) {
-			throw new UnauthorizedException('Authorization header not found');
-		}
+    if (!authHeader) {
+      throw new UnauthorizedException('Authorization header not found');
+    }
 
-		try {
-			const token = authHeader.split(' ')[1];
-			const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const tokenParts = authHeader.split(' ');
+    if (tokenParts.length !== 2 || tokenParts[0] !== 'Bearer') {
+      throw new UnauthorizedException('Invalid authorization header format');
+    }
 
-			req['user'] = decoded;
+    const token = tokenParts[1];
 
-			next();
-		} catch (err) {
-			throw new UnauthorizedException('Invalid token');
-		}
-	}
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      req['user'] = decoded;
+      next();
+    } catch (err) {
+      throw new UnauthorizedException('Invalid token');
+    }
+  }
 }

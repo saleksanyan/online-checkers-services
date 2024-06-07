@@ -17,17 +17,24 @@ import { CreateGameDto } from './game/dto/create-game.dto';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
-
-	// const gameService = app.get(GameService);
-	// const gameDto = new CreateGameDto();
-	// gameDto.gameToken = randomUUID();
-	// gameService.create(gameDto);
-
-	const config = new DocumentBuilder().setTitle('Your API Title').setDescription('API description').setVersion('1.0').build();
+  
+	const config = new DocumentBuilder()
+	  .setTitle('API')
+	  .setDescription('API description')
+	  .setVersion('1.0')
+	  .addBearerAuth(
+		{ 
+		  type: 'http', 
+		  scheme: 'bearer', 
+		  bearerFormat: 'JWT' 
+		},
+		'JWT'
+	  )
+	  .build();
+  
 	const document = SwaggerModule.createDocument(app, config);
-
 	SwaggerModule.setup('api', app, document);
-
+  
 	await app.listen(3000);
 }
 bootstrap();

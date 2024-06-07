@@ -22,6 +22,10 @@ import { AuthService } from 'src/auth/auth.service';
 })
 export class GameModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
-		consumer.apply(JwtMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
+		consumer.apply(JwtMiddleware)
+    .exclude(
+			{ path: 'games/NewGame', method: RequestMethod.GET },
+		  )
+    .forRoutes({ path: '*', method: RequestMethod.ALL });
 	}
 }

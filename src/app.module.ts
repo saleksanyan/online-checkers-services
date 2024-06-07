@@ -9,6 +9,7 @@ import * as dotenv from 'dotenv';
 import { GameEntity } from './game/entities/game.entity';
 import { PlayerEntity } from './player/entities/player.entity';
 import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 
 dotenv.config();
 
@@ -19,6 +20,10 @@ dotenv.config();
 			envFilePath: `.env`,
 		}),
 		TypeOrmModule.forFeature([GameEntity, PlayerEntity]),
+		JwtModule.register({
+			secret: process.env.JWT_SECRET_KEY,
+			signOptions: { expiresIn: '1h' },
+		}),
 		TypeOrmModule.forRoot({
 			type: 'postgres',
 			host: process.env.DB_HOST,
@@ -27,9 +32,9 @@ dotenv.config();
 			password: process.env.DB_PASSWORD,
 			database: process.env.DB_NAME,
 			entities: [
-				join(__dirname, './**/**/*.entity{.ts,.js}'), // Main entities directory
-				join(__dirname, './game/entities/**/*{.ts,.js}'), // Game entities directory
-				join(__dirname, './player/entities/**/*{.ts,.js}'), // player entities directory
+				join(__dirname, './**/**/*.entity{.ts,.js}'), 
+				join(__dirname, './game/entities/**/*{.ts,.js}'),
+				join(__dirname, './player/entities/**/*{.ts,.js}'),
 			],
 			synchronize: true,
 			logging: true,
