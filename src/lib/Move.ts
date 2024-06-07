@@ -10,16 +10,16 @@ class Move {
 	}
 
 	toJSON() {
-        return {
-            __class: this.constructor.name,
-            start: this.start.toJSON(),
-            dest: this.dest.toJSON(),
-        };
-    }
+		return {
+			__class: this.constructor.name,
+			start: this.start.toJSON(),
+			dest: this.dest.toJSON(),
+		};
+	}
 
-    static fromJSON(json: any): Move {
-        return new Move(Position.fromJSON(json.start), Position.fromJSON(json.dest));
-    }
+	static fromJSON(json: any): Move {
+		return new Move(Position.fromJSON(json.start), Position.fromJSON(json.dest));
+	}
 
 	getStart() {
 		return this.start;

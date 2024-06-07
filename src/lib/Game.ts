@@ -23,60 +23,58 @@ class Game {
 		this.reachablePositionsOfCurrentFigure = null;
 	}
 
-	
 	toJSON() {
-        let serializedReachablePositions = null;
-        if (this.reachablePositionsOfCurrentFigure) {
-            serializedReachablePositions = [];
-            for (let i = 0; i < this.reachablePositionsOfCurrentFigure.length; i++) {
-                serializedReachablePositions.push(this.reachablePositionsOfCurrentFigure[i].toJSON());
-            }
-        }
+		let serializedReachablePositions = null;
+		if (this.reachablePositionsOfCurrentFigure) {
+			serializedReachablePositions = [];
+			for (let i = 0; i < this.reachablePositionsOfCurrentFigure.length; i++) {
+				serializedReachablePositions.push(this.reachablePositionsOfCurrentFigure[i].toJSON());
+			}
+		}
 
-        let serializedMoves = [];
-        for (let j = 0; j < this.moves.length; j++) {
-            serializedMoves.push(this.moves[j].toJSON());
-        }
+		let serializedMoves = [];
+		for (let j = 0; j < this.moves.length; j++) {
+			serializedMoves.push(this.moves[j].toJSON());
+		}
 
-        return {
-            __class: 'Game',
-            board: this.board.toJSON(),
-            currentFigure: this.currentFigure ? this.currentFigure.toJSON() : null,
-            reachablePositionsOfCurrentFigure: serializedReachablePositions,
-            moves: serializedMoves,
-        };
-    }
+		return {
+			__class: 'Game',
+			board: this.board.toJSON(),
+			currentFigure: this.currentFigure ? this.currentFigure.toJSON() : null,
+			reachablePositionsOfCurrentFigure: serializedReachablePositions,
+			moves: serializedMoves,
+		};
+	}
 
-    static fromJSON(json: any): Game {
-        let game = new Game();
-        game.board = Board.fromJSON(json.board);
-		if(json.currentFigure != null){
-			if(json.currentFigure.__class == 'Pawn'){
-				game.currentFigure = Pawn.fromJSON(json.currentFigure); 
-			}else{
+	static fromJSON(json: any): Game {
+		let game = new Game();
+		game.board = Board.fromJSON(json.board);
+		if (json.currentFigure != null) {
+			if (json.currentFigure.__class == 'Pawn') {
+				game.currentFigure = Pawn.fromJSON(json.currentFigure);
+			} else {
 				game.currentFigure = Queen.fromJSON(json.currentFigure);
 			}
-		}else{
-        	game.currentFigure =  null;
+		} else {
+			game.currentFigure = null;
 		}
-        let deserializedReachablePositions = null;
-        if (json.reachablePositionsOfCurrentFigure) {
-            deserializedReachablePositions = [];
-            for (let i = 0; i < json.reachablePositionsOfCurrentFigure.length; i++) {
-                deserializedReachablePositions.
-				push(Position.fromJSON(json.reachablePositionsOfCurrentFigure[i]));
-            }
-        }
-        game.reachablePositionsOfCurrentFigure = deserializedReachablePositions;
+		let deserializedReachablePositions = null;
+		if (json.reachablePositionsOfCurrentFigure) {
+			deserializedReachablePositions = [];
+			for (let i = 0; i < json.reachablePositionsOfCurrentFigure.length; i++) {
+				deserializedReachablePositions.push(Position.fromJSON(json.reachablePositionsOfCurrentFigure[i]));
+			}
+		}
+		game.reachablePositionsOfCurrentFigure = deserializedReachablePositions;
 
-        let deserializedMoves = [];
-        for (let j = 0; j < json.moves.length; j++) {
-            deserializedMoves.push(Move.fromJSON(json.moves[j]));
-        }
-        game.moves = deserializedMoves;
+		let deserializedMoves = [];
+		for (let j = 0; j < json.moves.length; j++) {
+			deserializedMoves.push(Move.fromJSON(json.moves[j]));
+		}
+		game.moves = deserializedMoves;
 
-        return game;
-    }
+		return game;
+	}
 	//example of move` 'a3'
 	pickAFigure(startPosition: string): Position[] | null {
 		this.assignToNull();
@@ -84,14 +82,13 @@ class Game {
 			return null;
 		}
 		let position = new Position(startPosition);
-		
+
 		let figure = this.board.getBoard()[position.getRow()][position.getColumn()];
-		
-		if (figure instanceof Figure) { 
+
+		if (figure instanceof Figure) {
 			this.currentFigure = figure;
-			this.reachablePositionsOfCurrentFigure =
-				this.currentFigure.reachablePositions(this.board, this.moves);
-				
+			this.reachablePositionsOfCurrentFigure = this.currentFigure.reachablePositions(this.board, this.moves);
+
 			return this.reachablePositionsOfCurrentFigure;
 		}
 
@@ -100,28 +97,18 @@ class Game {
 	//example of next move` 'b4'
 	makeTheNextMove(nextMove: string): boolean {
 		const nextPosition = new Position(nextMove);
-		if (
-			!Validations.placeIsEmpty(
-				nextPosition.getRow(),
-				nextPosition.getColumn(),
-				this.board,
-			)
-		) {
+		if (!Validations.placeIsEmpty(nextPosition.getRow(), nextPosition.getColumn(), this.board)) {
 			this.assignToNull();
 			return false;
 		}
 
 		let isPositionPresent = false;
-		
+
 		this.reachablePositionsOfCurrentFigure?.forEach((pos) => {
-			if (
-				pos.getColumn() === nextPosition.getColumn() &&
-				pos.getRow() === nextPosition.getRow()
-			) {
+			if (pos.getColumn() === nextPosition.getColumn() && pos.getRow() === nextPosition.getRow()) {
 				isPositionPresent = true;
 			}
 		});
-
 
 		if (!isPositionPresent) {
 			this.assignToNull();

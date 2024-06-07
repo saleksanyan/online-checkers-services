@@ -27,16 +27,7 @@ export class Constants {
 		h: 7,
 	};
 
-	public static readonly COLUMNS_TO_LETTERS = [
-		'a',
-		'b',
-		'c',
-		'd',
-		'e',
-		'f',
-		'g',
-		'h',
-	];
+	public static readonly COLUMNS_TO_LETTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 }
 
 export default Constants;

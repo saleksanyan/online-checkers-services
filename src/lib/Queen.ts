@@ -11,32 +11,23 @@ class Queen extends Figure {
 	constructor(color: Color, position: Position) {
 		super(color, position);
 	}
-	
+
 	toJSON() {
 		let obj = {
-            __class: this.constructor.name,
-            color: this.color,
-            currentPosition: this.currentPosition.toJSON(),
-        }
-        return obj;
-    }
+			__class: this.constructor.name,
+			color: this.color,
+			currentPosition: this.currentPosition.toJSON(),
+		};
+		return obj;
+	}
 
 	static fromJSON(json: any): Queen {
-        return new Queen(json.color, Position.fromJSON(json.currentPosition));
-    }
+		return new Queen(json.color, Position.fromJSON(json.currentPosition));
+	}
 
 	reachablePositions(board: Board, moves: Move[]): Position[] {
-		let visited = new Array(BoardConstants.ROWS)
-			.fill(null)
-			.map(() => new Array(BoardConstants.COLUMNS).fill(false));
-		return this.allDestinations(
-			this.currentPosition,
-			board,
-			false,
-			[],
-			moves,
-			visited,
-		);
+		let visited = new Array(BoardConstants.ROWS).fill(null).map(() => new Array(BoardConstants.COLUMNS).fill(false));
+		return this.allDestinations(this.currentPosition, board, false, [], moves, visited);
 	}
 
 	allDestinations(
@@ -65,36 +56,20 @@ class Queen extends Figure {
 			let eatablePositions: number[] = [];
 
 			while (Validations.isValidPlace(row, column)) {
-				let backToSamePosition =
-					this.currentPosition.getColumn() === column &&
-					this.currentPosition.getRow() === row;
+				let backToSamePosition = this.currentPosition.getColumn() === column && this.currentPosition.getRow() === row;
 				if (!sameColorFigure) {
-					if (
-						isCaptured &&
-						(Validations.placeIsEmpty(row, column, board) || backToSamePosition)
-					) {
+					if (isCaptured && (Validations.placeIsEmpty(row, column, board) || backToSamePosition)) {
 						isCaptured = false;
 					}
-					if (
-						!visited[row][column] &&
-						!Validations.placeIsEmpty(row, column, board) &&
-						!backToSamePosition
-					) {
+					if (!visited[row][column] && !Validations.placeIsEmpty(row, column, board) && !backToSamePosition) {
 						const figure = board.getBoard()[row][column];
 						if (figure instanceof Figure) {
-							if (
-								!isCaptured &&
-								!visited[row][column] &&
-								this.hasOppositeColor(figure)
-							) {
+							if (!isCaptured && !visited[row][column] && this.hasOppositeColor(figure)) {
 								isCaptured = true;
 								afterEatingFlag = true;
 								eatablePositions = [row, column];
 							} else if (
-								!(
-									this.currentPosition.getColumn() === column &&
-									this.currentPosition.getRow() === row
-								) &&
+								!(this.currentPosition.getColumn() === column && this.currentPosition.getRow() === row) &&
 								!this.hasOppositeColor(figure)
 							) {
 								sameColorFigure = true;
@@ -106,39 +81,17 @@ class Queen extends Figure {
 					} else if (!isCaptured && (!afterEating || afterEatingFlag)) {
 						if (afterEatingFlag && !visited[row][column]) {
 							visited[row][column] = true;
-							let nextPos = HelpingFunctions.addingPositionToArray(
-								row,
-								column,
-								allDestinations,
-							);
+							let nextPos = HelpingFunctions.addingPositionToArray(row, column, allDestinations);
 							moves.push(new Move(position, nextPos));
 							let eatableFigureRow = eatablePositions[0];
 							let eatableFigureColumn = eatablePositions[1];
 							visited[eatableFigureRow][eatableFigureColumn] = true;
-							this.allDestinations(
-								nextPos,
-								board,
-								true,
-								allDestinations,
-								moves,
-								visited,
-							);
+							this.allDestinations(nextPos, board, true, allDestinations, moves, visited);
 							visited[row][column] = false;
 							afterEatingFlag = false;
 						} else if (!visited[row][column]) {
-							HelpingFunctions.addingPositionToArray(
-								row,
-								column,
-								allDestinations,
-							);
-							moves.push(
-								new Move(
-									position,
-									new Position(
-										Position.getPositionUsingBoardPlaces(row, column),
-									),
-								),
-							);
+							HelpingFunctions.addingPositionToArray(row, column, allDestinations);
+							moves.push(new Move(position, new Position(Position.getPositionUsingBoardPlaces(row, column))));
 						}
 						afterEatingFlag = false;
 						visited[row][column] = true;

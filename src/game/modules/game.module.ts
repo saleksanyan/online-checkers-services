@@ -9,21 +9,19 @@ import { PlayerEntity } from 'src/player/entities/player.entity';
 import { AuthService } from 'src/auth/auth.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([GameEntity, PlayerEntity]),
-    JwtModule.register({
-      secret: process.env.JWT_SECRET_KEY,
-      signOptions: { expiresIn: '1h' },
-    }),
-  ],
-  controllers: [GameController],
-  providers: [GameService, JwtService, AuthService],
-  exports: [JwtService]
+	imports: [
+		TypeOrmModule.forFeature([GameEntity, PlayerEntity]),
+		JwtModule.register({
+			secret: process.env.JWT_SECRET_KEY,
+			signOptions: { expiresIn: '1h' },
+		}),
+	],
+	controllers: [GameController],
+	providers: [GameService, JwtService, AuthService],
+	exports: [JwtService],
 })
 export class GameModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(JwtMiddleware)
-      .forRoutes({ path: '*', method: RequestMethod.ALL });
-  }
+	configure(consumer: MiddlewareConsumer) {
+		consumer.apply(JwtMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
+	}
 }

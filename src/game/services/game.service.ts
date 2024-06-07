@@ -11,7 +11,6 @@ import { PlayerEntity } from 'src/player/entities/player.entity';
 import { JwtService } from '@nestjs/jwt';
 import { CreateGameDto } from '../dto/create-game.dto';
 
-
 @Injectable()
 export class GameService {
 	constructor(
@@ -19,17 +18,16 @@ export class GameService {
 		private readonly gameRepository: Repository<GameEntity>,
 		@InjectRepository(PlayerEntity)
 		private readonly playerRepository: Repository<PlayerEntity>,
-		private readonly jwtService: JwtService
+		private readonly jwtService: JwtService,
 	) {}
 
 	async create(): Promise<PlayerEntity> {
-
 		let createGameDto = new CreateGameDto();
 		createGameDto.game = new Game();
 		const newGame = this.gameRepository.create(createGameDto);
 		let player = this.playerRepository.create();
 		player.gameID = newGame.id;
-        player.jwtPlayer = this.jwtService.sign({ playerId: player.id });
+		player.jwtPlayer = this.jwtService.sign({ playerId: player.id });
 		try {
 			await this.gameRepository.save(newGame);
 			await this.playerRepository.save(player);
@@ -38,9 +36,7 @@ export class GameService {
 			console.error('Error creating GameEntity:', error);
 			throw new HttpException(ERROR_MESSAGE.concat(error.message), 500);
 		}
-		
 	}
-	
 
 	async findAll(): Promise<GameEntity[]> {
 		return this.gameRepository.find();
@@ -48,7 +44,7 @@ export class GameService {
 
 	async findOne(gameID: string): Promise<GameEntity> {
 		const options: FindOneOptions<GameEntity> = {
-			where: { id: gameID }
+			where: { id: gameID },
 		};
 		return this.gameRepository.findOne(options);
 	}
@@ -71,17 +67,11 @@ export class GameService {
 		return game;
 	}
 
-	async pickAFigure(id: string, startPosition: string): 
-			Promise<CustomResponse<GameEntity>> {
+	async pickAFigure(id: string, startPosition: string): Promise<CustomResponse<GameEntity>> {
 		try {
 			const gameResponse = await this.findOne(id);
 			if (!gameResponse.game) {
-				return new CustomResponse<GameEntity>(
-					ERROR_MESSAGE,
-					null,
-					null,
-					RESPONSE_MESSAGES.GAME_NOT_FOUND
-				);
+				return new CustomResponse<GameEntity>(ERROR_MESSAGE, null, null, RESPONSE_MESSAGES.GAME_NOT_FOUND);
 			}
 
 			let game = gameResponse.game;
@@ -95,49 +85,44 @@ export class GameService {
 			updatedGameEntity.id = id;
 			await this.update(updatedGameEntity);
 
-			return new CustomResponse<GameEntity>(
-				SUCCESS_MESSAGE,
-				updatedGameEntity,
-				null,
-				RESPONSE_MESSAGES.PICK_FIGURE_SUCCESS
-			);
+			return new CustomResponse<GameEntity>(SUCCESS_MESSAGE, updatedGameEntity, null, RESPONSE_MESSAGES.PICK_FIGURE_SUCCESS);
 		} catch (error) {
 			console.error('Error picking a figure:', error);
 			throw new HttpException(ERROR_MESSAGE.concat(error.message), error.status);
 		}
 	}
 
-	async undoMove(id: string, index: string): Promise<GameEntity> { 
-		try { 
-			const game = await this.findOne(id); 
-			game.game.undoMove(index); 
-		
-			const gameDto = new UpdateGameDto(); 
-			gameDto.game = game.game; 
-			gameDto.id = id; 
-			
-			this.update(gameDto); 
-		
-			return game; 
-			} catch (error) { 
-			throw new HttpException(error, error.status); 
-		} 
+	async undoMove(id: string, index: string): Promise<GameEntity> {
+		try {
+			const game = await this.findOne(id);
+			game.game.undoMove(index);
+
+			const gameDto = new UpdateGameDto();
+			gameDto.game = game.game;
+			gameDto.id = id;
+
+			this.update(gameDto);
+
+			return game;
+		} catch (error) {
+			throw new HttpException(error, error.status);
+		}
 	}
 
-	async makeTheNextMove(id: string, nextMove: string): Promise<GameEntity> { 
-		try { 
-			const game = await this.findOne(id); 
-			if (game == null || !game.game.makeTheNextMove(nextMove)){ 
-				throw new HttpException('Wrong next move', 500); 
+	async makeTheNextMove(id: string, nextMove: string): Promise<GameEntity> {
+		try {
+			const game = await this.findOne(id);
+			if (game == null || !game.game.makeTheNextMove(nextMove)) {
+				throw new HttpException('Wrong next move', 500);
 			}
-			const gameDto = new UpdateGameDto(); 
-			gameDto.game = game.game; 
-			gameDto.id = id; 
-			
-			this.update(gameDto); 
+			const gameDto = new UpdateGameDto();
+			gameDto.game = game.game;
+			gameDto.id = id;
+
+			this.update(gameDto);
 			return game;
-		} catch (error) { 
-		 throw new HttpException(error, error.status); 
+		} catch (error) {
+			throw new HttpException(error, error.status);
 		}
 	}
 }

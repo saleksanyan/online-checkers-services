@@ -1,13 +1,4 @@
-import {
-	Controller,
-	Get,
-	Post,
-	Body,
-	Param,
-	Delete,
-	Patch,
-	Query,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch, Query } from '@nestjs/common';
 import { GameService } from '../services/game.service';
 import { GameEntity } from '../entities/game.entity';
 import { UpdateGameDto } from '../dto/update-game.dto';
@@ -42,19 +33,17 @@ export class GameController {
 	}
 
 	@Patch(':gameID/pickAFigure/:position')
-	async pickAFigure( @Param('gameID') gameID: string, 
-		@Param('position') position: string ): Promise<CustomResponse<GameEntity>> {
+	async pickAFigure(@Param('gameID') gameID: string, @Param('position') position: string): Promise<CustomResponse<GameEntity>> {
 		return this.gameService.pickAFigure(gameID, position);
 	}
 
-	@Patch(':gameID/undoMove/:index') 
-	async undoMove(@Param('gameToken') gameID: string, @Param('index') index: string): Promise<GameEntity> { 
-	return this.gameService.undoMove(gameID, index); 
- 	} 
+	@Patch(':gameID/undoMove/:index')
+	async undoMove(@Param('gameToken') gameID: string, @Param('index') index: string): Promise<GameEntity> {
+		return this.gameService.undoMove(gameID, index);
+	}
 
-	@Patch(':gameToken/makeTheNextMove/:nextStep/') 
-	async makeTheNextMove(@Param('gameToken') gameToken: string,
-	 @Param('nextStep') nextStep: string): Promise<UpdateGameDto> { 
-		return this.gameService.makeTheNextMove(gameToken, nextStep); 
+	@Patch(':gameToken/makeTheNextMove/:nextStep/')
+	async makeTheNextMove(@Param('gameToken') gameToken: string, @Param('nextStep') nextStep: string): Promise<UpdateGameDto> {
+		return this.gameService.makeTheNextMove(gameToken, nextStep);
 	}
 }
