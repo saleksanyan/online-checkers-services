@@ -22,7 +22,7 @@ dotenv.config();
 		TypeOrmModule.forFeature([GameEntity, PlayerEntity]),
 		JwtModule.register({
 			secret: process.env.JWT_SECRET_KEY,
-			signOptions: { expiresIn: '1h' },
+			signOptions: { expiresIn: '24h' },
 		}),
 		TypeOrmModule.forRoot({
 			type: 'postgres',
