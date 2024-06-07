@@ -1,15 +1,15 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { GameEntity } from '../entities/game.entity';
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from 'src/helper/statuses';
 import { RESPONSE_MESSAGES } from 'src/helper/respose-messages';
-import { CreateGameDto } from '../dto/create-game.dto';
 import Game from 'src/lib/Game';
 import { UpdateGameDto } from '../dto/update-game.dto';
-import { HashingService } from 'src/helper/hashingService';
 import { CustomResponse } from 'src/helper/customResponse';
-
+import { PlayerEntity } from 'src/player/entities/player.entity';
+import { JwtService } from '@nestjs/jwt';
+import { CreateGameDto } from '../dto/create-game.dto';
 
 
 @Injectable()
@@ -17,83 +17,64 @@ export class GameService {
 	constructor(
 		@InjectRepository(GameEntity)
 		private readonly gameRepository: Repository<GameEntity>,
+		@InjectRepository(PlayerEntity)
+		private readonly playerRepository: Repository<PlayerEntity>,
+		private readonly jwtService: JwtService
 	) {}
 
-	async create(
-		createGameDto: CreateGameDto,
-	): Promise<CustomResponse<GameEntity>> {
-		const existingGame = await this.gameRepository.findOne({
-			where: { gameToken: createGameDto.gameToken },
-		});
+	async create(): Promise<PlayerEntity> {
 
-		if (existingGame) {
-			return new CustomResponse<GameEntity>(
-				SUCCESS_MESSAGE,
-				existingGame,
-				null,
-				RESPONSE_MESSAGES.GAME_EXISTS,
-			);
-		}
-
+		let createGameDto = new CreateGameDto();
 		createGameDto.game = new Game();
 		const newGame = this.gameRepository.create(createGameDto);
-		
+		let player = this.playerRepository.create();
+		player.gameID = newGame.id;
+        player.jwtPlayer = this.jwtService.sign({ playerId: player.id });
 		try {
 			await this.gameRepository.save(newGame);
-
-			return new CustomResponse<GameEntity>(
-				SUCCESS_MESSAGE,
-				newGame,
-				null,
-				RESPONSE_MESSAGES.CREATE_GAME_SUCCESS,
-			);
+			await this.playerRepository.save(player);
+			return player;
 		} catch (error) {
 			console.error('Error creating GameEntity:', error);
-			return new CustomResponse<GameEntity>(
-				ERROR_MESSAGE,
-				error.message,
-				RESPONSE_MESSAGES.CREATE_GAME_FAIL,
-				error.status,
-			);
+			throw new HttpException(ERROR_MESSAGE.concat(error.message), 500);
 		}
 		
 	}
+	
 
 	async findAll(): Promise<GameEntity[]> {
 		return this.gameRepository.find();
 	}
 
-	async findOne(gameToken: string): Promise<GameEntity> {
+	async findOne(gameID: string): Promise<GameEntity> {
 		const options: FindOneOptions<GameEntity> = {
-			where: { gameToken: gameToken }
+			where: { id: gameID }
 		};
 		return this.gameRepository.findOne(options);
 	}
 
 	async update(updateGameDto: Partial<GameEntity>): Promise<GameEntity> {
 		const options: FindOptionsWhere<GameEntity> = {
-			gameToken: updateGameDto.gameToken,
+			id: updateGameDto.id,
 		};
 		try {
 			await this.gameRepository.update(options, updateGameDto);
-			return this.findOne(updateGameDto.gameToken);
+			return this.findOne(updateGameDto.id);
 		} catch (error) {
-
 			throw new HttpException(ERROR_MESSAGE.concat(error.message), 500);
 		}
 	}
 
-	async remove(gameToken: string): Promise<GameEntity> {
-		let game = this.findOne(gameToken);
-		await this.gameRepository.delete((await game).id);
+	async remove(id: string): Promise<GameEntity> {
+		let game = this.findOne(id);
+		await this.gameRepository.delete(id);
 		return game;
 	}
 
-	async pickAFigure(gameToken: string, startPosition: string): 
+	async pickAFigure(id: string, startPosition: string): 
 			Promise<CustomResponse<GameEntity>> {
 		try {
-			const gameResponse = await this.findOne(gameToken);
-			
+			const gameResponse = await this.findOne(id);
 			if (!gameResponse.game) {
 				return new CustomResponse<GameEntity>(
 					ERROR_MESSAGE,
@@ -111,7 +92,7 @@ export class GameService {
 
 			const updatedGameEntity = new GameEntity();
 			updatedGameEntity.game = game;
-			updatedGameEntity.gameToken = gameToken;
+			updatedGameEntity.id = id;
 			await this.update(updatedGameEntity);
 
 			return new CustomResponse<GameEntity>(
@@ -126,14 +107,14 @@ export class GameService {
 		}
 	}
 
-	async undoMove(gameToken: string, index: string): Promise<GameEntity> { 
+	async undoMove(id: string, index: string): Promise<GameEntity> { 
 		try { 
-			const game = await this.findOne(gameToken); 
+			const game = await this.findOne(id); 
 			game.game.undoMove(index); 
 		
 			const gameDto = new UpdateGameDto(); 
 			gameDto.game = game.game; 
-			gameDto.gameToken = gameToken; 
+			gameDto.id = id; 
 			
 			this.update(gameDto); 
 		
@@ -143,15 +124,15 @@ export class GameService {
 		} 
 	}
 
-	async makeTheNextMove(gameToken: string, nextMove: string): Promise<GameEntity> { 
+	async makeTheNextMove(id: string, nextMove: string): Promise<GameEntity> { 
 		try { 
-			const game = await this.findOne(gameToken); 
+			const game = await this.findOne(id); 
 			if (game == null || !game.game.makeTheNextMove(nextMove)){ 
 				throw new HttpException('Wrong next move', 500); 
 			}
 			const gameDto = new UpdateGameDto(); 
 			gameDto.game = game.game; 
-			gameDto.gameToken = gameToken; 
+			gameDto.id = id; 
 			
 			this.update(gameDto); 
 			return game;

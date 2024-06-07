@@ -1,11 +1,12 @@
 import {
 	Entity,
 	Column,
-	Index,
 	PrimaryGeneratedColumn,
 	ValueTransformer,
 } from 'typeorm';
 import Game from 'src/lib/Game';
+import {v4 as uuidv4} from 'uuid';
+
 
 const gameTransformer: ValueTransformer = {
     to: (game: Game) => serializeGame(game),
@@ -26,12 +27,8 @@ function deserializeGame(json: string): Game {
 
 @Entity()
 export class GameEntity {
-	@PrimaryGeneratedColumn()
-	id: number;
-
-	@Column({ nullable: false })
-	@Index({ unique: true })
-	gameToken: string;
+	@PrimaryGeneratedColumn('uuid')
+    id: string = uuidv4();
 
 	@Column({ type: 'json', transformer: gameTransformer })
 	game: Game;

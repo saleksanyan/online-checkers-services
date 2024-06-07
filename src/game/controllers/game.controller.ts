@@ -10,27 +10,25 @@ import {
 } from '@nestjs/common';
 import { GameService } from '../services/game.service';
 import { GameEntity } from '../entities/game.entity';
-import { CreateGameDto } from '../dto/create-game.dto';
 import { UpdateGameDto } from '../dto/update-game.dto';
 import { CustomResponse } from 'src/helper/customResponse';
+import { PlayerEntity } from 'src/player/entities/player.entity';
 @Controller('games')
 export class GameController {
 	constructor(private readonly gameService: GameService) {}
 
-	@Post()
-	async create(
-		@Body() createGameDto: CreateGameDto,
-	): Promise<CustomResponse<GameEntity>> {
-		return this.gameService.create(createGameDto);
+	@Get('NewGame')
+	async create(): Promise<PlayerEntity> {
+		return this.gameService.create();
 	}
 	@Get()
 	async findAll(): Promise<GameEntity[]> {
 		return this.gameService.findAll();
 	}
 
-	@Get(':gameToken')
-	async findOne(@Param('gameToken') gameToken: string): Promise<GameEntity> {
-		return this.gameService.findOne(gameToken);
+	@Get(':gameID')
+	async findOne(@Param('gameID') gameID: string): Promise<GameEntity> {
+		return this.gameService.findOne(gameID);
 	}
 
 	@Patch()
@@ -38,20 +36,20 @@ export class GameController {
 		return this.gameService.update(updateGameDto);
 	}
 
-	@Delete(':gameToken')
-	async remove(@Param('gameToken') gameToken: string): Promise<GameEntity> {
-		return this.gameService.remove(gameToken);
+	@Delete(':gameID')
+	async remove(@Param('gameID') gameID: string): Promise<GameEntity> {
+		return this.gameService.remove(gameID);
 	}
 
-	@Patch(':gameToken/pickAFigure/:position')
-	async pickAFigure( @Param('gameToken') gameToken: string, 
+	@Patch(':gameID/pickAFigure/:position')
+	async pickAFigure( @Param('gameID') gameID: string, 
 		@Param('position') position: string ): Promise<CustomResponse<GameEntity>> {
-		return this.gameService.pickAFigure(gameToken, position);
+		return this.gameService.pickAFigure(gameID, position);
 	}
 
-	@Patch(':gameToken/undoMove/:index') 
-	async undoMove(@Param('gameToken') gameToken: string, @Param('index') index: string): Promise<GameEntity> { 
-	return this.gameService.undoMove(gameToken, index); 
+	@Patch(':gameID/undoMove/:index') 
+	async undoMove(@Param('gameToken') gameID: string, @Param('index') index: string): Promise<GameEntity> { 
+	return this.gameService.undoMove(gameID, index); 
  	} 
 
 	@Patch(':gameToken/makeTheNextMove/:nextStep/') 

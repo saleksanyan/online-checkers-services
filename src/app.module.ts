@@ -7,6 +7,8 @@ import { GameModule } from './game/modules/game.module';
 import { join } from 'path';
 import * as dotenv from 'dotenv';
 import { GameEntity } from './game/entities/game.entity';
+import { PlayerEntity } from './player/entities/player.entity';
+import { AuthModule } from './auth/auth.module';
 
 dotenv.config();
 
@@ -16,7 +18,8 @@ dotenv.config();
 			isGlobal: true,
 			envFilePath: `.env`,
 		}),
-		TypeOrmModule.forFeature([GameEntity]),
+		TypeOrmModule.forFeature([GameEntity, PlayerEntity]),
+		
 		TypeOrmModule.forRoot({
 			type: 'postgres',
 			host: process.env.DB_HOST,
@@ -27,11 +30,13 @@ dotenv.config();
 			entities: [
 				join(__dirname, './**/**/*.entity{.ts,.js}'), // Main entities directory
 				join(__dirname, './game/entities/**/*{.ts,.js}'), // Game entities directory
+				join(__dirname, './player/entities/**/*{.ts,.js}'), // player entities directory
 			],
 			synchronize: true,
 			logging: true,
 		}),
 		GameModule,
+		AuthModule,
 	],
 	controllers: [GameController],
 	providers: [GameService],
