@@ -26,7 +26,7 @@ export class GameService {
 		createGameDto.game = new Game();
 		const newGame = this.gameRepository.create(createGameDto);
 		let player = this.playerRepository.create();
-		player.gameID = newGame.id;
+		player.game = newGame;
 		player.jwtPlayer = this.jwtService.sign({ playerId: player.id });
 		try {
 			await this.gameRepository.save(newGame);
