@@ -75,29 +75,32 @@ export class GameService {
 
 	async remove(id: string): Promise<GameEntity> {
 		let game = this.findOne(id);
+		let players = (await game).players;
+		this.playerRepository.delete(players[0]);
+		if(players.length === 2){
+			this.playerRepository.delete(players[1])
+		}
 		await this.gameRepository.delete(id);
 		return game;
 	}
 
-	async pickAFigure(id: string, startPosition: string): Promise<CustomResponse<GameEntity>> {
+	async pickAFigure(id: string, startPosition: string): Promise<GameEntity> {
 		try {
 			const gameResponse = await this.findOne(id);
 			if (!gameResponse.game) {
-				return new CustomResponse<GameEntity>(ERROR_MESSAGE, null, null, RESPONSE_MESSAGES.GAME_NOT_FOUND);
+				throw new HttpException(RESPONSE_MESSAGES.GAME_NOT_FOUND, 500); 
 			}
-
 			let game = gameResponse.game;
 			let position = game.pickAFigure(startPosition);
 			if (position == null) {
 				throw new HttpException(RESPONSE_MESSAGES.WRONG_POSITION, 500);
 			}
-
-			const updatedGameEntity = new GameEntity();
+			const updatedGameEntity = this.gameRepository.create();
 			updatedGameEntity.game = game;
 			updatedGameEntity.id = id;
-			await this.update(updatedGameEntity);
+			this.update(updatedGameEntity);
 
-			return new CustomResponse<GameEntity>(SUCCESS_MESSAGE, updatedGameEntity, null, RESPONSE_MESSAGES.PICK_FIGURE_SUCCESS);
+			return updatedGameEntity;
 		} catch (error) {
 			console.error('Error picking a figure:', error);
 			throw new HttpException(ERROR_MESSAGE.concat(error.message), error.status);
@@ -132,7 +135,8 @@ export class GameService {
 			gameDto.id = id;
 
 			this.update(gameDto);
-			return this.findOne(gameDto.id);
+			let gameEntity = this.findOne(gameDto.id);
+			return this.update(gameDto);
 		} catch (error) {
 			throw new HttpException(error, error.status);
 		}
