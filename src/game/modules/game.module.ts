@@ -4,9 +4,8 @@ import { JwtModule, JwtService } from '@nestjs/jwt'; // Import JwtModule
 import { GameEntity } from '../entities/game.entity';
 import { GameController } from '../controllers/game.controller';
 import { GameService } from '../services/game.service';
-import { JwtMiddleware } from 'src/helper/jwt.middleware';
-import { PlayerEntity } from 'src/player/entities/player.entity';
-import { AuthService } from 'src/auth/auth.service';
+import { JwtMiddleware } from '../../helper/jwt.middleware';
+import { PlayerEntity } from '../../player/entities/player.entity';
 
 @Module({
 	imports: [
@@ -17,8 +16,8 @@ import { AuthService } from 'src/auth/auth.service';
 		}),
 	],
 	controllers: [GameController],
-	providers: [GameService, JwtService, AuthService],
-	exports: [JwtService],
+	providers: [GameService, JwtService],
+	exports: [JwtService, TypeOrmModule],
 })
 export class GameModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {

@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
-import Game from 'src/lib/Game';
 import { v4 as uuidv4 } from 'uuid';
+import Game from '../../lib/Game';
 
 export class UpdateGameDto {
 	@IsNotEmpty()
