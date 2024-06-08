@@ -2,14 +2,13 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { GameEntity } from '../entities/game.entity';
-import { ERROR_MESSAGE, SUCCESS_MESSAGE } from 'src/helper/statuses';
-import { RESPONSE_MESSAGES } from 'src/helper/respose-messages';
-import Game from 'src/lib/Game';
 import { UpdateGameDto } from '../dto/update-game.dto';
-import { CustomResponse } from 'src/helper/customResponse';
-import { PlayerEntity } from 'src/player/entities/player.entity';
 import { JwtService } from '@nestjs/jwt';
 import { CreateGameDto } from '../dto/create-game.dto';
+import { RESPONSE_MESSAGES } from '../../helper/respose-messages';
+import { ERROR_MESSAGE } from '../../helper/statuses';
+import Game from '../../lib/Game';
+import { PlayerEntity } from '../../player/entities/player.entity';
 
 @Injectable()
 export class GameService {

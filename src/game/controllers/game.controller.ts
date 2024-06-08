@@ -2,9 +2,9 @@ import { Controller, Get, Body, Param, Delete, Patch, Post } from '@nestjs/commo
 import { GameService } from '../services/game.service';
 import { GameEntity } from '../entities/game.entity';
 import { UpdateGameDto } from '../dto/update-game.dto';
-import { CustomResponse } from 'src/helper/customResponse';
-import { PlayerEntity } from 'src/player/entities/player.entity';
-import { Public } from 'src/helper/public.decorator';
+import { Public } from '../../helper/public.decorator';
+import { PlayerEntity } from '../../player/entities/player.entity';
+
 @Controller('games')
 export class GameController {
 	constructor(private readonly gameService: GameService) {}

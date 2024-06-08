@@ -8,8 +8,8 @@ import { join } from 'path';
 import * as dotenv from 'dotenv';
 import { GameEntity } from './game/entities/game.entity';
 import { PlayerEntity } from './player/entities/player.entity';
-import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
+import { PlayerModule } from './player/modules/player.module';
 
 dotenv.config();
 
@@ -36,11 +36,12 @@ dotenv.config();
 				join(__dirname, './game/entities/**/*{.ts,.js}'),
 				join(__dirname, './player/entities/**/*{.ts,.js}'),
 			],
+			
 			synchronize: true,
 			logging: true,
 		}),
 		GameModule,
-		AuthModule,
+		PlayerModule
 	],
 	controllers: [GameController],
 	providers: [GameService],

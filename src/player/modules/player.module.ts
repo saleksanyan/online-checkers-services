@@ -6,5 +6,6 @@ import { PlayerEntity } from '../entities/player.entity';
 	imports: [TypeOrmModule.forFeature([PlayerEntity])],
 	controllers: [],
 	providers: [],
+	exports: [TypeOrmModule]
 })
 export class PlayerModule {}

@@ -13,10 +13,10 @@ export default new DataSource({
 	password: configService.get<string>('DB_PASSWORD'),
 	database: configService.get<string>('DB_NAME'),
 	synchronize: false,
-	logging: configService.get<boolean>('DB_LOGGING', false),
+	logging: configService.get<boolean>('DB_LOGGING', true),
 
-	entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-	migrations: [__dirname + '/../database/migrations/*{.ts,.js}'],
+	entities: [__dirname + './../**/*.entity{.ts,.js}'],
+	migrations: [__dirname + './../database/migrations/*{.ts,.js}'],
 	migrationsTableName: 'migrations',
 	migrationsRun: false,
 });
@@ -31,8 +31,8 @@ const config = {
 	synchronize: true,
 	logging: configService.get<boolean>('DB_LOGGING', false),
 
-	entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-	migrations: [__dirname + '/../database/migrations/*{.ts,.js}'],
+	entities: [__dirname + './../**/*.entity{.ts,.js}'],
+	migrations: [__dirname + './../database/migrations/*{.ts,.js}'],
 	migrationsTableName: 'migrations',
 	migrationsRun: false,
 };

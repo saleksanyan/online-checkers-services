@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ValueTransformer } from 'typeorm';
-import Game from 'src/lib/Game';
 import { v4 as uuidv4 } from 'uuid';
+import Game from '../../lib/Game';
 
 const gameTransformer: ValueTransformer = {
 	to: (game: Game) => serializeGame(game),
@@ -23,7 +23,7 @@ export class GameEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string = uuidv4();
 
-  @Column({ type: 'json', transformer: gameTransformer })
+  @Column({ type: 'json', transformer: gameTransformer, nullable: false})
   game: Game;
 
   @Column({ type: 'simple-array' })
