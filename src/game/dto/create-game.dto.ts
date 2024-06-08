@@ -8,4 +8,7 @@ export class CreateGameDto {
 
 	@IsOptional()
 	game?: Game;
+
+	@IsOptional()
+  	players: string[];
 }

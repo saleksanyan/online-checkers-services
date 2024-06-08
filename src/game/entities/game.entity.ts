@@ -20,9 +20,13 @@ function deserializeGame(json: string): Game {
 
 @Entity()
 export class GameEntity {
-	@PrimaryGeneratedColumn('uuid')
-	id: string = uuidv4();
+  @PrimaryGeneratedColumn('uuid')
+  id: string = uuidv4();
 
-	@Column({ type: 'json', transformer: gameTransformer })
-	game: Game;
+  @Column({ type: 'json', transformer: gameTransformer })
+  game: Game;
+
+  @Column({ type: 'simple-array' })
+  players: string[];
 }
+

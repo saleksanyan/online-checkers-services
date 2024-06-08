@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Param, Delete, Patch } from '@nestjs/common';
+import { Controller, Get, Body, Param, Delete, Patch, Post } from '@nestjs/common';
 import { GameService } from '../services/game.service';
 import { GameEntity } from '../entities/game.entity';
 import { UpdateGameDto } from '../dto/update-game.dto';
@@ -10,14 +10,16 @@ export class GameController {
 	constructor(private readonly gameService: GameService) {}
 
 	@Public()
-	@Get('NewGame')
+	@Post('newGame')
 	async create(): Promise<PlayerEntity> {
 		return this.gameService.create();
 	}
-	@Get()
-	async findAll(): Promise<GameEntity[]> {
-		return this.gameService.findAll();
+	
+	@Post('addSecondPlayer/:gameID')
+	async addSecondPlayer(@Param('gameID') gameID: string): Promise<PlayerEntity> {
+		return this.gameService.addSecondPlayer(gameID);
 	}
+
 
 	@Get(':gameID')
 	async findOne(@Param('gameID') gameID: string): Promise<GameEntity> {

@@ -8,4 +8,7 @@ export class UpdateGameDto {
 
 	@IsOptional()
 	game?: Game;
+
+	@IsOptional()
+	players: string[];
 }

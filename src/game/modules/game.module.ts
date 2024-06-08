@@ -24,7 +24,9 @@ export class GameModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
 		consumer.apply(JwtMiddleware)
     .exclude(
-			{ path: 'games/NewGame', method: RequestMethod.GET },
+			{ path: 'games/newGame', method: RequestMethod.POST },
+      { path: 'games/addSecondPlayer/:gameID', method: RequestMethod.POST },
+      { path: 'games/:gameID', method: RequestMethod.GET } 
 		  )
     .forRoutes({ path: '*', method: RequestMethod.ALL });
 	}

@@ -1,4 +1,4 @@
-import { HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { GameEntity } from '../entities/game.entity';
@@ -24,34 +24,40 @@ export class GameService {
 	async create(): Promise<PlayerEntity> {
 		let createGameDto = new CreateGameDto();
 		createGameDto.game = new Game();
-		console.log("player.jwtPlayer22");
-
-		const newGame = this.gameRepository.create(createGameDto);
+	
+	
 		let player = this.playerRepository.create();
-		player.game = newGame;
-		console.log(player.id );
-
+		createGameDto.players = [player.id];
+		console.log(player.id);
+		const newGame = this.gameRepository.create(createGameDto);
+		player.gameID = newGame.id;
 		player.jwtPlayer = this.jwtService.sign({ playerId: player.id });
-		console.log(player.jwtPlayer);
-		
+	
 		try {
-			await this.gameRepository.save(newGame);
-			await this.playerRepository.save(player);
-			return player;
+			console.log(newGame);
+		  await this.playerRepository.save(player);
+		  await this.gameRepository.save(newGame);
+	
+		  return player;
 		} catch (error) {
-			console.error('Error creating GameEntity:', error);
-			throw new HttpException(ERROR_MESSAGE.concat(error.message), 500);
+		  console.error('Error creating GameEntity:', error);
+		  throw new HttpException(`Error creating GameEntity: ${error.message}`, 500);
 		}
-	}
+	  }
+	  
 
 	async findAll(): Promise<GameEntity[]> {
+		console.log("FIND ALLL");
 		return this.gameRepository.find();
 	}
+
 
 	async findOne(gameID: string): Promise<GameEntity> {
 		const options: FindOneOptions<GameEntity> = {
 			where: { id: gameID },
 		};
+		console.log(this.gameRepository.findOne(options));
+		
 		return this.gameRepository.findOne(options);
 	}
 
@@ -126,9 +132,35 @@ export class GameService {
 			gameDto.id = id;
 
 			this.update(gameDto);
-			return game;
+			return this.findOne(gameDto.id);
 		} catch (error) {
 			throw new HttpException(error, error.status);
+		}
+	}
+
+	async addSecondPlayer(gameID: string): Promise<PlayerEntity> {
+		try {
+		  const game = await this.gameRepository.findOne({ where: { id: gameID }});
+		  if (!game) {
+			throw new HttpException('Game not found', 404);
+		  }
+	
+		  const players = game.players;
+		  if (players.length < 2) {
+			let secondPlayer = this.playerRepository.create();
+			secondPlayer.gameID = game.id;
+			secondPlayer.jwtPlayer = this.jwtService.sign({ playerId: secondPlayer.id });
+			await this.playerRepository.save(secondPlayer);
+			game.players.push(secondPlayer.id);
+        	await this.gameRepository.save(game);
+			console.log(secondPlayer);
+			
+			return secondPlayer;
+		  } else {
+			throw new HttpException('Game already has two players', 400);
+		  }
+		} catch (error) {
+		  throw new HttpException(error.message, error.status || 500);
 		}
 	}
 }
