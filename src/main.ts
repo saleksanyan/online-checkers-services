@@ -10,10 +10,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import Board from './lib/Board';
-import { GameService } from './game/services/game.service';
-import { randomUUID } from 'crypto';
-import { CreateGameDto } from './game/dto/create-game.dto';
+
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
@@ -34,7 +31,7 @@ async function bootstrap() {
   
 	const document = SwaggerModule.createDocument(app, config);
 	SwaggerModule.setup('api', app, document);
-  
+	app.enableCors();
 	await app.listen(3000);
 }
 bootstrap();
