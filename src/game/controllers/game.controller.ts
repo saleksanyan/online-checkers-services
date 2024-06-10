@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Param, Delete, Patch, Post } from '@nestjs/common';
+import { Controller, Get, Body, Param, Delete, Patch, Post, Redirect } from '@nestjs/common';
 import { GameService } from '../services/game.service';
 import { GameEntity } from '../entities/game.entity';
 import { UpdateGameDto } from '../dto/update-game.dto';
@@ -19,6 +19,7 @@ export class GameController {
 	
 	//adds second player by giving game id, if the game exists and does not have 2 players
 	//return: player(entity)
+	@Public()
 	@Post('addSecondPlayer/:gameID')
 	async addSecondPlayer(@Param('gameID') gameID: string): Promise<PlayerEntity> {
 		return this.gameService.addSecondPlayer(gameID);
@@ -27,6 +28,7 @@ export class GameController {
 
 	//get: game entity by giving its id
 	//return: game entity
+	@Public()
 	@Get(':gameID')
 	async findOne(@Param('gameID') gameID: string): Promise<GameEntity> {
 		return this.gameService.findOne(gameID);
