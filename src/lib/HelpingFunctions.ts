@@ -193,8 +193,6 @@ class HelpingFunctions {
 		let index = parseInt(userChoice);
 		const stepObj = stepHistory[index];
         const step = Object.values(stepObj)[0]
-		console.log("\nSTEP "+step);
-		console.log("BOARD TURN "+ board.getWhosTurn()+ "\n");
 		
 		if(board.getWhosTurn() === step){
 			return false;
