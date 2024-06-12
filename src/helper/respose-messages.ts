@@ -8,6 +8,7 @@ export const RESPONSE_MESSAGES = {
 	UPDATE_GAME_FAIL: ' Failed to update the game',
 	PICK_FIGURE_FAIL: ' Could not find the figure',
 	PICK_FIGURE_SUCCESS: 'Found the figure',
-	INTERNAL_SERVER_ERROR: ' Was not able to pick a position',
+	INTERNAL_SERVER_ERROR: 'Was not able to pick a position',
 	WRONG_POSITION: ' Wrong position',
+	WRONG_COLOR: 'Wrong color'
 };

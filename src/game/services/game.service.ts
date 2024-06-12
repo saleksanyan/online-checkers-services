@@ -27,26 +27,22 @@ export class GameService {
 	
 		let player = this.playerRepository.create();
 		createGameDto.players = [player.id];
-		console.log(player.id);
 		const newGame = this.gameRepository.create(createGameDto);
 		player.gameID = newGame.id;
 		player.jwtPlayer = this.jwtService.sign({ playerId: player.id });
 	
 		try {
-			console.log(newGame);
 		  await this.playerRepository.save(player);
 		  await this.gameRepository.save(newGame);
 	
 		  return player;
 		} catch (error) {
-		  console.error('Error creating GameEntity:', error);
 		  throw new HttpException(`Error creating GameEntity: ${error.message}`, 500);
 		}
 	  }
 	  
 
 	async findAll(): Promise<GameEntity[]> {
-		console.log("FIND ALLL");
 		return this.gameRepository.find();
 	}
 
@@ -54,9 +50,7 @@ export class GameService {
 	async findOne(gameID: string): Promise<GameEntity> {
 		const options: FindOneOptions<GameEntity> = {
 			where: { id: gameID },
-		};
-		console.log(this.gameRepository.findOne(options));
-		
+		};		
 		return this.gameRepository.findOne(options);
 	}
 
@@ -66,7 +60,7 @@ export class GameService {
 		};
 		try {
 			await this.gameRepository.update(options, updateGameDto);
-			return this.findOne(updateGameDto.id);
+			return await this.findOne(updateGameDto.id);
 		} catch (error) {
 			throw new HttpException(ERROR_MESSAGE.concat(error.message), 500);
 		}
@@ -77,7 +71,7 @@ export class GameService {
 		let players = (await game).players;
 		this.playerRepository.delete(players[0]);
 		if(players.length === 2){
-			this.playerRepository.delete(players[1])
+			await this.playerRepository.delete(players[1])
 		}
 		await this.gameRepository.delete(id);
 		return game;
@@ -97,7 +91,7 @@ export class GameService {
 			const updatedGameEntity = this.gameRepository.create();
 			updatedGameEntity.game = game;
 			updatedGameEntity.id = id;
-			this.update(updatedGameEntity);
+			await this.update(updatedGameEntity);
 
 			return updatedGameEntity;
 		} catch (error) {
@@ -109,13 +103,15 @@ export class GameService {
 	async undoMove(id: string, index: string): Promise<GameEntity> {
 		try {
 			const game = await this.findOne(id);
-			game.game.undoMove(index);
+			if (!game.game.undoMove(index)){
+				throw new HttpException(RESPONSE_MESSAGES.WRONG_COLOR, 500);
+			};
 
 			const gameDto = new UpdateGameDto();
 			gameDto.game = game.game;
 			gameDto.id = id;
 
-			this.update(gameDto);
+			await this.update(gameDto);
 
 			return game;
 		} catch (error) {
@@ -133,9 +129,9 @@ export class GameService {
 			gameDto.game = game.game;
 			gameDto.id = id;
 
-			this.update(gameDto);
-			let gameEntity = this.findOne(gameDto.id);
-			return this.update(gameDto);
+			// await this.update(gameDto);
+			let gameEntity = await this.findOne(gameDto.id);
+			return this.update(gameDto);;
 		} catch (error) {
 			throw new HttpException(error, error.status);
 		}
@@ -155,9 +151,7 @@ export class GameService {
 			secondPlayer.jwtPlayer = this.jwtService.sign({ playerId: secondPlayer.id });
 			await this.playerRepository.save(secondPlayer);
 			game.players.push(secondPlayer.id);
-        	await this.gameRepository.save(game);
-			console.log(secondPlayer);
-			
+        	await this.gameRepository.save(game);			
 			return secondPlayer;
 		  } else {
 			throw new HttpException('Game already has two players', 400);
