@@ -17,7 +17,7 @@ import { PlayerEntity } from '../../player/entities/player.entity';
 	],
 	controllers: [GameController],
 	providers: [GameService, JwtService],
-	exports: [JwtService, TypeOrmModule],
+	exports: [],
 })
 export class GameModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {

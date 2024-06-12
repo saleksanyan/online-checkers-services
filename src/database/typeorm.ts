@@ -1,40 +1,41 @@
-import { ConfigService, registerAs } from '@nestjs/config';
-import { config as envConfig } from 'dotenv';
+import { registerAs } from '@nestjs/config';
 import { DataSource } from 'typeorm';
+import * as dotenv from 'dotenv';
 
-envConfig({ path: `.env` });
-const configService: ConfigService = new ConfigService();
+dotenv.config();
 
-export default new DataSource({
-	type: 'postgres',
-	host: configService.get<string>('DB_HOST'),
-	port: configService.get<number>('DB_PORT'),
-	username: configService.get<string>('DB_USERNAME'),
-	password: configService.get<string>('DB_PASSWORD'),
-	database: configService.get<string>('DB_NAME'),
-	synchronize: false,
-	logging: configService.get<boolean>('DB_LOGGING', true),
+const dataSource = new DataSource({
+  type: 'postgres',
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT, 10),
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  synchronize: false,
+  logging: process.env.DB_LOGGING === 'true',
 
-	entities: [__dirname + './../**/*.entity{.ts,.js}'],
-	migrations: [__dirname + './../database/migrations/*{.ts,.js}'],
-	migrationsTableName: 'migrations',
-	migrationsRun: false,
+  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+  migrations: [__dirname + '/../database/migrations/*{.ts,.js}'],
+  migrationsTableName: 'migrations',
+  migrationsRun: false,
 });
 
-const config = {
-	type: 'postgres',
-	host: configService.get<string>('DB_HOST'),
-	port: configService.get<number>('DB_PORT'),
-	username: configService.get<string>('DB_USERNAME'),
-	password: configService.get<string>('DB_PASSWORD'),
-	database: configService.get<string>('DB_NAME'),
-	synchronize: true,
-	logging: configService.get<boolean>('DB_LOGGING', false),
+export default dataSource;
 
-	entities: [__dirname + './../**/*.entity{.ts,.js}'],
-	migrations: [__dirname + './../database/migrations/*{.ts,.js}'],
-	migrationsTableName: 'migrations',
-	migrationsRun: false,
+const config = {
+  type: 'postgres',
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT, 10),
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  synchronize: true,
+  logging: process.env.DB_LOGGING === 'true',
+
+  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+  migrations: [__dirname + '/../database/migrations/*{.ts,.js}'],
+  migrationsTableName: 'migrations',
+  migrationsRun: false,
 };
 
 export const typeormConfig = registerAs('typeorm', () => config);

@@ -188,10 +188,19 @@ class HelpingFunctions {
 		if (userChoiceNum < 0 || userChoiceNum >= stepHistory.length) {
 			return false;
 		}
+		
 		let boardHistory = history.getBoardHistory();
 		let index = parseInt(userChoice);
+		const stepObj = stepHistory[index];
+        const step = Object.values(stepObj)[0]
+		console.log("\nSTEP "+step);
+		console.log("BOARD TURN "+ board.getWhosTurn()+ "\n");
+		
+		if(board.getWhosTurn() === step){
+			return false;
+		}
 		board.setBoard(history.changeBoard(index));
-		history.setBoardHistory(boardHistory.slice(0, index + 1));
+		history.setBoardHistory(boardHistory.slice(0, index));
 		history.setStepHistory(stepHistory.slice(0, index));
 		HelpingFunctions.changeCountOfFigures(board);
 
